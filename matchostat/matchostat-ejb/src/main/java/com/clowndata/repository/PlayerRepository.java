@@ -6,6 +6,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NamedQuery;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ import java.util.List;
 public class PlayerRepository {
 
 
-    @Inject
+    @PersistenceContext
     private EntityManager em;
 
 
@@ -36,7 +37,7 @@ public class PlayerRepository {
 
     public List getAllPlayers() {
 
-        List players = em.createNamedQuery("Player.findAll").getResultList();
+        List<Player> players = em.createNamedQuery("Player.findAll",Player.class).getResultList();
 
         return players;
     }

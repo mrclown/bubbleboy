@@ -7,6 +7,7 @@ import com.clowndata.model.Team;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.Set;
 public class GameRepository {
 
 
-    @Inject
+    @PersistenceContext
     private EntityManager em;
 
 
