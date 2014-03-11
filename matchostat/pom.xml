@@ -60,6 +60,20 @@
             <scope>import</scope>
          </dependency>
 
+          <!-- Remove jboss-javaee-web-6.0 ? -->
+          <dependency>
+              <groupId>javax</groupId>
+              <artifactId>javaee-web-api</artifactId>
+              <version>7.0</version>
+              <scope>provided</scope>
+          </dependency>
+
+          <dependency>
+              <groupId>org.slf4j</groupId>
+              <artifactId>slf4j-api</artifactId>
+              <version>1.7.5</version>
+          </dependency>
+
          <!-- JSR-303 (Bean Validation) Implementation -->
          <!-- Provides portable constraints such as @Email -->
          <!-- Hibernate Validator is shipped in JBoss AS 7 -->
