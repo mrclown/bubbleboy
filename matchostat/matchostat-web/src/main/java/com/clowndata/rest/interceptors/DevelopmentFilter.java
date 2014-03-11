@@ -37,6 +37,10 @@ public class DevelopmentFilter implements Filter {
         if(servletResponse instanceof HttpServletResponse) {
             HttpServletResponse response = (HttpServletResponse) servletResponse;
             response.addHeader("Access-Control-Allow-Origin", "*");
+            response.addHeader("Access-Control-Allow-Methods","POST, PUT, GET, DELETE");
+            response.addHeader("Access-Control-Allow-Headers","Content-Type, *");
+
+
         }
     }
 
