@@ -17,19 +17,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQuery(name = "Game.findAll", query = "SELECT g FROM Game g")
 public class Game {
 
-    public void setTeam1(Team team1) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @XmlAttribute
+    Long id;
 
-        this.team1 = team1;
-    }
-
-    public void setTeam2(Team team2) {
-        this.team2 = team2;
-    }
-
-/*    public void setId(Long id) {
-        this.id = id;
-    }
-*/
     @XmlAttribute
 //    @NotNull
     @OneToOne
@@ -40,20 +32,21 @@ public class Game {
     @OneToOne
     private Team team2;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @XmlAttribute
-    private Long id;
-
     public Game() {
     }
 
     public Game(Team team1, Team team2) {
         this.team1 = team1;
         this.team2 = team2;
+    }
 
-        //TODO: replace code
-        //this.id = new Long(10);
+    public void setTeam1(Team team1) {
+
+        this.team1 = team1;
+    }
+
+    public void setTeam2(Team team2) {
+        this.team2 = team2;
     }
 
     public Team getTeam1() {

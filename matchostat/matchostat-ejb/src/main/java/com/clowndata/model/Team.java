@@ -24,7 +24,7 @@ public class Team {
     Long id;
 
     @XmlAttribute
-    @OneToMany
+    @ManyToMany
 //    @ElementCollection(fetch=FetchType.EAGER)
     Set<Player> players = new HashSet<Player>();
 

@@ -28,16 +28,12 @@ public class GameRepository {
     public Long createGame(Game game) {
 
         Team team = game.getTeam1();
-        System.out.println("Persisting team 1");
         em.persist(team);
 
         team = game.getTeam2();
-        System.out.println("Persisting team 2");
         em.persist(team);
 
-        System.out.println("Persisting game");
         em.persist(game);
-        System.out.println("Persisting done!");
 
         return game.getId();
     }
@@ -45,16 +41,23 @@ public class GameRepository {
     public Game getGame(Long id) {
         Game game = em.find(Game.class, id);
 
-        // To force fetching of players within the session
-        game.getTeam1().getPlayers().size();
-        game.getTeam2().getPlayers().size();
-
+        if (game != null) {
+            // To force fetching of players within the session
+            game.getTeam1().getPlayers().size();
+            game.getTeam2().getPlayers().size();
+        }
         return game;
     }
 
-    public List getAllGames() {
+    public List<Game> getAllGames() {
 
-        List games = em.createNamedQuery("Game.findAll").getResultList();
+        List<Game> games = em.createNamedQuery("Game.findAll").getResultList();
+
+        for(Game game : games){
+            // To force fetching of players within the session
+            game.getTeam1().getPlayers().size();
+            game.getTeam2().getPlayers().size();
+        }
 
         return games;
     }
@@ -78,6 +81,7 @@ public class GameRepository {
 
         if (game != null) {
             em.remove(game);
+            //TODO delete teams
             deleted = true;
         }
 
