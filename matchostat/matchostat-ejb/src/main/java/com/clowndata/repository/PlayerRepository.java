@@ -48,6 +48,7 @@ public class PlayerRepository {
 
         if (persistedPlayer != null) {
             persistedPlayer.setName(player.getName());
+            persistedPlayer.setActive(player.getActive());
         }
 
         return persistedPlayer;

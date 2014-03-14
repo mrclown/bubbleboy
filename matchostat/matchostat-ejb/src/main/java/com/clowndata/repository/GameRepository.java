@@ -53,7 +53,7 @@ public class GameRepository {
 
         List<Game> games = em.createNamedQuery("Game.findAll").getResultList();
 
-        for(Game game : games){
+        for (Game game : games) {
             // To force fetching of players within the session
             game.getTeam1().getPlayers().size();
             game.getTeam2().getPlayers().size();
@@ -80,12 +80,23 @@ public class GameRepository {
         Game game = em.find(Game.class, id);
 
         if (game != null) {
+            deleteTeams(game);
             em.remove(game);
-            //TODO delete teams
             deleted = true;
         }
 
         return deleted;
+    }
+
+    private void deleteTeams(Game game) {
+        Team team = game.getTeam1();
+        if (team != null) {
+            em.remove(team);
+        }
+        team = game.getTeam2();
+        if (team != null) {
+            em.remove(team);
+        }
     }
 
     public List getTeams(Long id) {

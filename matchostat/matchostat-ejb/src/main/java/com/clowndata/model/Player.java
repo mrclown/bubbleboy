@@ -28,12 +28,16 @@ public class Player {
     @Size(min = 1, max = 20)
     String name;
 
-    public Player() {
+    @XmlAttribute
+    Boolean active;
 
+    public Player() {
+        this.active = true;
     }
 
     public Player(String name) {
         this.name = name;
+        this.active = true;
     }
 
     public Long getId() {
@@ -47,4 +51,13 @@ public class Player {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
 }
