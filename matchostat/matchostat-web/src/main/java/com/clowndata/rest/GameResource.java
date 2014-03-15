@@ -72,9 +72,11 @@ public class GameResource {
 
     @PUT
     @Path("{id}")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces("text/plain")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response putGame(@PathParam("id") String id, Game game) {
+
+        gameRepository.updateGame(Long.parseLong(id), game);
 
         //TODO: implement conflict (409)?
         //TODO: implement not found (404)

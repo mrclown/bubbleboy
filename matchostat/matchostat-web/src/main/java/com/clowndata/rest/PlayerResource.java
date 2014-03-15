@@ -57,7 +57,6 @@ public class PlayerResource {
     @Produces("text/plain")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createPlayer(Player player) {
-
         Long id = playerRepository.createPlayer(player);
 
         URI uri = uriInfo.getAbsolutePathBuilder().path(id.toString()).build();

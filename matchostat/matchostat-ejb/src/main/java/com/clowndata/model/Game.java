@@ -23,12 +23,10 @@ public class Game {
     Long id;
 
     @XmlAttribute
-//    @NotNull
     @OneToOne
     private Team team1;
 
     @XmlAttribute
-//    @NotNull
     @OneToOne
     private Team team2;
 

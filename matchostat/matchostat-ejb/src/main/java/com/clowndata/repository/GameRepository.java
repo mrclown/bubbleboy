@@ -62,14 +62,31 @@ public class GameRepository {
         return games;
     }
 
+    private void updateTeam(Team persistedTeam, Team team) {
+        persistedTeam.setPlayers(team.getPlayers());
+        persistedTeam.setScore(team.getScore());
+    }
+
     public Game updateGame(Long id, Game game) {
 
         Game persistedGame = em.find(Game.class, id);
 
         if (persistedGame != null) {
-            //   persistedGame.setName(player.getName());
-        }
+            Team persistedTeam = persistedGame.getTeam1();
+            if (persistedTeam != null) {
+                updateTeam(persistedTeam, game.getTeam1());
 
+            } else {
+                em.persist(game.getTeam1());
+            }
+
+            persistedTeam = persistedGame.getTeam2();
+            if (persistedTeam != null) {
+                updateTeam(persistedTeam, game.getTeam2());
+            } else {
+                em.persist(game.getTeam2());
+            }
+        }
         return persistedGame;
     }
 
