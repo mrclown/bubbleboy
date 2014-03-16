@@ -5,11 +5,11 @@ package com.clowndata.model;
  */
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Date;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement
@@ -30,12 +30,18 @@ public class Game {
     @OneToOne
     private Team team2;
 
+    private Date gameStart;
+
+    private Date gameEnd;
+
     public Game() {
+        this(null, null);
     }
 
     public Game(Team team1, Team team2) {
         this.team1 = team1;
         this.team2 = team2;
+        gameStart = new Date();
     }
 
     public void setTeam1(Team team1) {

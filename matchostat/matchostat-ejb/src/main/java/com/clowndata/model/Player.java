@@ -7,6 +7,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created 2014.
@@ -31,13 +33,17 @@ public class Player {
     @XmlAttribute
     Boolean active;
 
+    @OneToMany
+    List<GameEvent> gameEvents;
+
     public Player() {
-        this.active = true;
+        this(null);
     }
 
     public Player(String name) {
         this.name = name;
         this.active = true;
+        this.gameEvents = new ArrayList<>();
     }
 
     public Long getId() {

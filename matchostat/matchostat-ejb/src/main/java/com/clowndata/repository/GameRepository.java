@@ -28,9 +28,11 @@ public class GameRepository {
     public Long createGame(Game game) {
 
         Team team = game.getTeam1();
+        team.printTeam();
         em.persist(team);
 
         team = game.getTeam2();
+        team.printTeam();
         em.persist(team);
 
         em.persist(game);

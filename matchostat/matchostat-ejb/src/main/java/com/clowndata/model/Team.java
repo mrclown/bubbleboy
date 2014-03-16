@@ -25,7 +25,7 @@ public class Team {
     @XmlAttribute
     @ManyToMany
 //    @ElementCollection(fetch=FetchType.EAGER)
-    Set<Player> players = new HashSet<Player>();
+            Set<Player> players = new HashSet<Player>();
 
     @XmlAttribute
     int score;
@@ -37,6 +37,12 @@ public class Team {
     public Team(Set<Player> players) {
         this.players = players;
         this.score = 0;
+    }
+
+    public void printTeam() {
+        for (Player player : this.players) {
+            System.err.println(player.getId());
+        }
     }
 
     public Set<Player> getPlayers() {
