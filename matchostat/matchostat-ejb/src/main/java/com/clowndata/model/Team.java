@@ -39,12 +39,6 @@ public class Team {
         this.score = 0;
     }
 
-    public void printTeam() {
-        for (Player player : this.players) {
-            System.err.println(player.getId());
-        }
-    }
-
     public Set<Player> getPlayers() {
         return this.players;
     }

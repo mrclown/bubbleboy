@@ -1,12 +1,16 @@
 package com.clowndata.repository;
 
+import com.clowndata.model.Game;
+import com.clowndata.model.GameEvent;
 import com.clowndata.model.Player;
+import sun.net.www.content.text.plain;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NamedQuery;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,7 +41,7 @@ public class PlayerRepository {
 
     public List getAllPlayers() {
 
-        List<Player> players = em.createNamedQuery("Player.findAll",Player.class).getResultList();
+        List<Player> players = em.createNamedQuery("Player.findAll", Player.class).getResultList();
 
         return players;
     }
@@ -66,5 +70,61 @@ public class PlayerRepository {
         }
 
         return deleted;
+    }
+
+    public List<GameEvent> getPlayerGameEvents(Long id, Long gameId) {
+
+        List<GameEvent> gameEvents = null;
+        Player player = em.find(Player.class, id);
+
+        if (player != null) {
+            gameEvents = new ArrayList();
+            for (GameEvent gameEvent : player.getGameEvents()) {
+                if (gameEvent.getGameId() == gameId) {
+                    gameEvents.add(gameEvent);
+                }
+            }
+        }
+
+        return gameEvents;
+    }
+
+    public Long createGameEvent(Long id, Long gameId, GameEvent gameEvent) {
+
+        gameEvent.setGameId(gameId);
+
+        Player player = em.find(Player.class, id);
+
+        if (player != null) {
+            player.addGameEvent(gameEvent);
+        }
+
+        em.persist(gameEvent);
+
+        return gameEvent.getId();
+    }
+
+    public void deleteEventsForPlayerInGame(Long id, Long gameId) {
+
+        Player player = em.find(Player.class, id);
+
+        List<GameEvent> gameEvents = player.getGameEvents();
+        List<GameEvent> gameEventsToDelete = new ArrayList<>();
+
+        for (GameEvent gameEvent : gameEvents) {
+            if (gameEvent.getGameId() == gameId) {
+                gameEventsToDelete.add(gameEvent);
+            }
+        }
+
+        deleteGameEvents(player, gameEventsToDelete);
+    }
+
+    private void deleteGameEvents(Player player, List<GameEvent> gameEventsToDelete) {
+
+        for (GameEvent gameEvent : gameEventsToDelete) {
+            player.getGameEvents().remove(gameEvent);
+            em.remove(gameEvent);
+        }
     }
 }

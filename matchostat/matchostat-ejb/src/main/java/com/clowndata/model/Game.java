@@ -30,12 +30,14 @@ public class Game {
     @OneToOne
     private Team team2;
 
+    @XmlAttribute
     private Date gameStart;
 
+    @XmlAttribute
     private Date gameEnd;
 
     public Game() {
-        this(null, null);
+        this(new Team(), new Team());
     }
 
     public Game(Team team1, Team team2) {

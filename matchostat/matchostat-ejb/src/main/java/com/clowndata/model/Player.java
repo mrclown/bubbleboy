@@ -23,18 +23,18 @@ public class Player {
     @XmlAttribute
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    private Long id;
 
     @XmlAttribute
     @NotNull
     @Size(min = 1, max = 20)
-    String name;
+    private String name;
 
     @XmlAttribute
-    Boolean active;
+    private Boolean active;
 
     @OneToMany
-    List<GameEvent> gameEvents;
+    private List<GameEvent> gameEvents;
 
     public Player() {
         this(null);
@@ -66,4 +66,11 @@ public class Player {
         return active;
     }
 
+    public List<GameEvent> getGameEvents() {
+        return gameEvents;
+    }
+
+    public void addGameEvent(GameEvent gameEvent) {
+        this.gameEvents.add(gameEvent);
+    }
 }

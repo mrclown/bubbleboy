@@ -21,6 +21,9 @@ import java.util.Set;
 public class GameRepository {
 
 
+    @Inject
+    private PlayerRepository playerRepository;
+
     @PersistenceContext
     private EntityManager em;
 
@@ -28,11 +31,9 @@ public class GameRepository {
     public Long createGame(Game game) {
 
         Team team = game.getTeam1();
-        team.printTeam();
         em.persist(team);
 
         team = game.getTeam2();
-        team.printTeam();
         em.persist(team);
 
         em.persist(game);
@@ -40,14 +41,19 @@ public class GameRepository {
         return game.getId();
     }
 
-    public Game getGame(Long id) {
-        Game game = em.find(Game.class, id);
+    private void eagerFetch(Game game) {
 
         if (game != null) {
-            // To force fetching of players within the session
             game.getTeam1().getPlayers().size();
             game.getTeam2().getPlayers().size();
         }
+    }
+
+    public Game getGame(Long id) {
+        Game game = em.find(Game.class, id);
+
+        eagerFetch(game);
+
         return game;
     }
 
@@ -56,9 +62,7 @@ public class GameRepository {
         List<Game> games = em.createNamedQuery("Game.findAll").getResultList();
 
         for (Game game : games) {
-            // To force fetching of players within the session
-            game.getTeam1().getPlayers().size();
-            game.getTeam2().getPlayers().size();
+            eagerFetch(game);
         }
 
         return games;
@@ -110,11 +114,20 @@ public class GameRepository {
     private void deleteTeams(Game game) {
         Team team = game.getTeam1();
         if (team != null) {
+            deleteEventsForPlayersInTeam(game.getId(), team);
             em.remove(team);
         }
         team = game.getTeam2();
         if (team != null) {
+            deleteEventsForPlayersInTeam(game.getId(), team);
             em.remove(team);
+        }
+    }
+
+    private void deleteEventsForPlayersInTeam(Long id, Team team) {
+
+        for (Player player : team.getPlayers()) {
+            playerRepository.deleteEventsForPlayerInGame(player.getId(), id);
         }
     }
 

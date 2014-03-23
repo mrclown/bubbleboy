@@ -4,6 +4,7 @@ package com.clowndata.rest;
  * Created 2014.
  */
 
+import com.clowndata.model.GameEvent;
 import com.clowndata.repository.PlayerRepository;
 import com.clowndata.model.Player;
 
@@ -90,4 +91,32 @@ public class PlayerResource {
 
         return Response.noContent().build();
     }
+
+    @GET
+    @Path("/{id:[0-9]*}/games/{gameId:[0-9]*}/events")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPlayerGameEvents(@PathParam("id") String id, @PathParam("gameId") String gameId) {
+
+        List<GameEvent> gameEvents = playerRepository.getPlayerGameEvents(Long.parseLong(id), Long.parseLong(gameId));
+
+        if (gameEvents == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        return Response.ok().entity(gameEvents).build();
+    }
+
+    @POST
+    @Produces("text/plain")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{id:[0-9]*}/games/{gameId:[0-9]*}/events")
+    public Response createGameEvent(@PathParam("id") String id, @PathParam("gameId") String gameId, GameEvent gameEvent) {
+
+        Long eventId = playerRepository.createGameEvent(Long.parseLong(id), Long.parseLong(gameId), gameEvent);
+
+        //TODO: Error handling: no player, no game, illegal event
+        URI uri = uriInfo.getAbsolutePathBuilder().path(eventId.toString()).build();
+        return Response.created(uri).build();
+    }
+
 }
