@@ -4,9 +4,12 @@ package com.clowndata.rest;
  * Created 2014.
  */
 
+import com.clowndata.model.Game;
 import com.clowndata.model.GameEvent;
+import com.clowndata.repository.GameRepository;
 import com.clowndata.repository.PlayerRepository;
 import com.clowndata.model.Player;
+import com.clowndata.service.GameService;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -24,6 +27,9 @@ import java.util.List;
 @Path("/players")
 @RequestScoped
 public class PlayerResource {
+
+    @Inject
+    private GameService gameService;
 
     @Inject
     private PlayerRepository playerRepository;
@@ -110,9 +116,9 @@ public class PlayerResource {
     @Produces("text/plain")
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{id:[0-9]*}/games/{gameId:[0-9]*}/events")
-    public Response createGameEvent(@PathParam("id") String id, @PathParam("gameId") String gameId, GameEvent gameEvent) {
+    public Response createPlayerGameEvent(@PathParam("id") String id, @PathParam("gameId") String gameId, GameEvent gameEvent) {
 
-        Long eventId = playerRepository.createGameEvent(Long.parseLong(id), Long.parseLong(gameId), gameEvent);
+        Long eventId = gameService.addPlayerGameEvent(Long.parseLong(id) ,Long.parseLong(gameId), gameEvent);
 
         //TODO: Error handling: no player, no game, illegal event
         URI uri = uriInfo.getAbsolutePathBuilder().path(eventId.toString()).build();

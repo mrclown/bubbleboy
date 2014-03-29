@@ -66,4 +66,14 @@ public class Game {
     public Long getId() {
         return id;
     }
+
+    public void increaseScoreForTeamWithPlayer(Player player) {
+        if (team1.getPlayers().contains(player)) {
+            team1.increaseScore();
+        } else if (team2.getPlayers().contains(player)) {
+            team2.increaseScore();
+        } else {
+            //TODO log
+        }
+    }
 }

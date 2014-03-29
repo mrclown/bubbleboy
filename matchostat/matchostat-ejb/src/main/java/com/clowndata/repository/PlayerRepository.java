@@ -89,15 +89,7 @@ public class PlayerRepository {
         return gameEvents;
     }
 
-    public Long createGameEvent(Long id, Long gameId, GameEvent gameEvent) {
-
-        gameEvent.setGameId(gameId);
-
-        Player player = em.find(Player.class, id);
-
-        if (player != null) {
-            player.addGameEvent(gameEvent);
-        }
+    public Long createGameEvent(GameEvent gameEvent) {
 
         em.persist(gameEvent);
 

@@ -15,6 +15,8 @@ import java.util.Date;
 @Entity
 public class GameEvent {
 
+    public static final int SCORE = 0;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @XmlAttribute
@@ -23,29 +25,40 @@ public class GameEvent {
     private Long gameId;
 
     @XmlAttribute
-    private String eventType;
+    private int eventType;
 
     @XmlAttribute
     private Date eventTime;
 
+    //TODO: clean up constructors
     public GameEvent() {
     }
 
-    public GameEvent(String eventType) {
+    public GameEvent(int eventType) {
         this.eventType = eventType;
         this.eventTime = new Date();
     }
 
-    public GameEvent(Date eventTime, String eventType) {
+    public GameEvent(Date eventTime, int eventType) {
         this.eventTime = eventTime;
         this.eventType = eventType;
     }
 
-    public GameEvent(Long gameId, Date eventTime, String eventType) {
+    public GameEvent(Long gameId, int eventType) {
+        this.gameId = gameId;
+        this.eventType = eventType;
+    }
+
+    public GameEvent(Game game, int eventType) {
+        this.gameId = game.getId();
+        this.eventType = eventType;
+    }
+    public GameEvent(Long gameId, Date eventTime, int eventType) {
         this.gameId = gameId;
         this.eventTime = eventTime;
         this.eventType = eventType;
     }
+
 
     public Long getGameId() {
         return gameId;
@@ -55,11 +68,11 @@ public class GameEvent {
         this.gameId = gameId;
     }
 
-    public String getEventType() {
+    public int getEventType() {
         return eventType;
     }
 
-    public void setEventType(String eventType) {
+    public void setEventType(int eventType) {
         this.eventType = eventType;
     }
 

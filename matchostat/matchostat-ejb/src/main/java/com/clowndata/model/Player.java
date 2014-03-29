@@ -70,7 +70,10 @@ public class Player {
         return gameEvents;
     }
 
-    public void addGameEvent(GameEvent gameEvent) {
+    public void addGameEvent(Game game, GameEvent gameEvent) {
+        if (gameEvent.getEventType() == GameEvent.SCORE) {
+            game.increaseScoreForTeamWithPlayer(this);
+        }
         this.gameEvents.add(gameEvent);
-    }
+  }
 }

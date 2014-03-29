@@ -47,6 +47,10 @@ public class Team {
         this.players = players;
     }
 
+    public void addPlayer(Player player) {
+        players.add(player);
+    }
+
     public int getScore() {
         return score;
     }
@@ -59,4 +63,7 @@ public class Team {
         return id;
     }
 
+    public void increaseScore() {
+        this.score++;
+    }
 }
