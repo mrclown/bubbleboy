@@ -91,7 +91,7 @@ public class PlayerResource {
     @Path("{id}")
     public Response deletePlayer(@PathParam("id") String id) {
 
-        if (!playerRepository.deletePlayer(Long.parseLong(id))) {
+        if (!gameService.deletePlayer(Long.parseLong(id))) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
@@ -118,7 +118,7 @@ public class PlayerResource {
     @Path("/{id:[0-9]*}/games/{gameId:[0-9]*}/events")
     public Response createPlayerGameEvent(@PathParam("id") String id, @PathParam("gameId") String gameId, GameEvent gameEvent) {
 
-        Long eventId = gameService.addPlayerGameEvent(Long.parseLong(id) ,Long.parseLong(gameId), gameEvent);
+        Long eventId = gameService.addPlayerGameEvent(Long.parseLong(id), Long.parseLong(gameId), gameEvent);
 
         //TODO: Error handling: no player, no game, illegal event
         URI uri = uriInfo.getAbsolutePathBuilder().path(eventId.toString()).build();

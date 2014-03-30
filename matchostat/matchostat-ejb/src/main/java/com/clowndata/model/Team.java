@@ -15,6 +15,7 @@ import java.util.Set;
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement
 @Entity
+@NamedQuery(name = "Team.findAll", query = "SELECT t FROM Team t")
 public class Team {
 
     @XmlAttribute

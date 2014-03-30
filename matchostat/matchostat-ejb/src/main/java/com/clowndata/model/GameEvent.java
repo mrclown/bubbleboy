@@ -22,7 +22,8 @@ public class GameEvent {
     @XmlAttribute
     private Long id;
 
-    private Long gameId;
+    @ManyToOne
+    private Game game;
 
     @XmlAttribute
     private int eventType;
@@ -44,28 +45,17 @@ public class GameEvent {
         this.eventType = eventType;
     }
 
-    public GameEvent(Long gameId, int eventType) {
-        this.gameId = gameId;
-        this.eventType = eventType;
-    }
-
     public GameEvent(Game game, int eventType) {
-        this.gameId = game.getId();
-        this.eventType = eventType;
-    }
-    public GameEvent(Long gameId, Date eventTime, int eventType) {
-        this.gameId = gameId;
-        this.eventTime = eventTime;
+        this.game = game;
         this.eventType = eventType;
     }
 
-
-    public Long getGameId() {
-        return gameId;
+    public Game getGame() {
+        return this.game;
     }
 
-    public void setGameId(Long gameId) {
-        this.gameId = gameId;
+    public void setGame(Game game) {
+        this.game = game;
     }
 
     public int getEventType() {

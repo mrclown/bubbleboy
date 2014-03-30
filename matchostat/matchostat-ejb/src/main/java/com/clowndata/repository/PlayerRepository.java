@@ -64,12 +64,21 @@ public class PlayerRepository {
 
         Player player = em.find(Player.class, id);
 
+
         if (player != null) {
+            deletePlayerEvents(player);
             em.remove(player);
             deleted = true;
         }
 
         return deleted;
+    }
+
+    private void deletePlayerEvents(Player player) {
+
+        for (GameEvent gameEvent : player.getGameEvents()) {
+            em.remove(gameEvent);
+        }
     }
 
     public List<GameEvent> getPlayerGameEvents(Long id, Long gameId) {
@@ -80,7 +89,7 @@ public class PlayerRepository {
         if (player != null) {
             gameEvents = new ArrayList();
             for (GameEvent gameEvent : player.getGameEvents()) {
-                if (gameEvent.getGameId() == gameId) {
+                if (gameEvent.getGame().getId() == gameId) {
                     gameEvents.add(gameEvent);
                 }
             }
@@ -88,6 +97,7 @@ public class PlayerRepository {
 
         return gameEvents;
     }
+
 
     public Long createGameEvent(GameEvent gameEvent) {
 
@@ -104,7 +114,7 @@ public class PlayerRepository {
         List<GameEvent> gameEventsToDelete = new ArrayList<>();
 
         for (GameEvent gameEvent : gameEvents) {
-            if (gameEvent.getGameId() == gameId) {
+            if (gameEvent.getGame().getId() == gameId) {
                 gameEventsToDelete.add(gameEvent);
             }
         }

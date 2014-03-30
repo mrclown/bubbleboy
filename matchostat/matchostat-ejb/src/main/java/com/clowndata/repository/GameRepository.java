@@ -68,6 +68,13 @@ public class GameRepository {
         return games;
     }
 
+    public List<Team> getAllTeams() {
+
+        List<Team> teams = em.createNamedQuery("Team.findAll").getResultList();
+
+        return teams;
+    }
+
     private void updateTeam(Team persistedTeam, Team team) {
         persistedTeam.setPlayers(team.getPlayers());
         persistedTeam.setScore(team.getScore());

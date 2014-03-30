@@ -75,5 +75,5 @@ public class Player {
             game.increaseScoreForTeamWithPlayer(this);
         }
         this.gameEvents.add(gameEvent);
-  }
+    }
 }
