@@ -5,14 +5,11 @@ package com.clowndata.rest;
  */
 
 import com.clowndata.model.Game;
-import com.clowndata.model.Player;
 import com.clowndata.model.Team;
 import com.clowndata.repository.GameRepository;
-import com.clowndata.repository.PlayerRepository;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -20,7 +17,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 import java.util.List;
-import java.util.Set;
 
 /**
  * REST Web Service

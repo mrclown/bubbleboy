@@ -4,6 +4,11 @@ package com.clowndata.model;
  * Created 2014.
  */
 
+import com.clowndata.util.DateDeserializer;
+import com.clowndata.util.DateSerializer;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -37,13 +42,17 @@ public class Game {
     private Date gameEnd;
 
     public Game() {
-        this(new Team(), new Team());
+        this(new Team(), new Team(), new Date());
     }
 
     public Game(Team team1, Team team2) {
+        this(team1, team2, new Date());
+    }
+
+    public Game(Team team1, Team team2, Date gameStart) {
         this.team1 = team1;
         this.team2 = team2;
-        gameStart = new Date();
+        this.gameStart = gameStart;
     }
 
     public void setTeam1(Team team1) {
@@ -65,6 +74,16 @@ public class Game {
 
     public Long getId() {
         return id;
+    }
+
+    @JsonSerialize(using = DateSerializer.class)
+    public Date getGameStart() {
+        return gameStart;
+    }
+
+    @JsonDeserialize(using = DateDeserializer.class)
+    public void setGameStart(Date gameStart) {
+        this.gameStart = gameStart;
     }
 
     public void increaseScoreForTeamWithPlayer(Player player) {

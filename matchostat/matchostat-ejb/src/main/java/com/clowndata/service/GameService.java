@@ -27,10 +27,19 @@ public class GameService {
     public Long addPlayerGameEvent(Long playerId, Long gameId, GameEvent gameEvent) {
 
         Player player = playerRepository.getPlayer(playerId);
+        if (player == null) {
+            throw new IllegalStateException("Invalid playerId: " + playerId);
+        }
+
+
         Game game = gameRepository.getGame(gameId);
+        if (game == null) {
+            throw new IllegalStateException("Invalid gameId: " + gameId);
+        }
+
         gameEvent.setGame(game);
 
-        player.addGameEvent(game, gameEvent);
+        player.addGameEvent(gameEvent);
 
         return playerRepository.createGameEvent(gameEvent);
     }

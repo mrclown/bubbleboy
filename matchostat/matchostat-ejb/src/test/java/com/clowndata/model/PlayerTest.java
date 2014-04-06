@@ -1,5 +1,6 @@
 package com.clowndata.model;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -9,40 +10,76 @@ import static org.junit.Assert.assertEquals;
  */
 public class PlayerTest {
 
-    @Test
-    public void testPlayerScores(){
 
-        Team replicants = new Team();
-        Team bladerunners = new Team();
+    Game game;
+    Team replicants;
+    Team bladerunners;
+    Player zora;
+    Player pris;
+    Player deckard;
 
-        Player zora = new Player("Zora");
-        Player pris = new Player("Pris");
+    @Before
+    public void createTestData() {
+
+        replicants = new Team();
+        bladerunners = new Team();
+
+        zora = new Player("Zora");
+        pris = new Player("Pris");
         replicants.addPlayer(zora);
         replicants.addPlayer(pris);
 
-        Player deckard = new Player("Deckard");
+        deckard = new Player("Deckard");
         bladerunners.addPlayer(deckard);
 
-        Game game = new Game(replicants, bladerunners);
+        game = new Game(replicants, bladerunners);
+    }
+
+    @Test
+    public void testPlayerScores() {
 
         assertEquals(0, replicants.getScore());
         assertEquals(0, bladerunners.getScore());
 
-        GameEvent gameEvent = new GameEvent(GameEvent.SCORE);
-
-        zora.addGameEvent(game, gameEvent);
+        zora.addGameEvent(new GameEvent(game, GameEvent.GOAL));
 
         assertEquals(1, replicants.getScore());
         assertEquals(0, bladerunners.getScore());
 
-        zora.addGameEvent(game, gameEvent);
+        zora.addGameEvent(new GameEvent(game, GameEvent.GOAL));
 
         assertEquals(2, replicants.getScore());
         assertEquals(0, bladerunners.getScore());
 
-        deckard.addGameEvent(game, gameEvent);
+        deckard.addGameEvent(new GameEvent(game, GameEvent.GOAL));
 
         assertEquals(2, replicants.getScore());
         assertEquals(1, bladerunners.getScore());
     }
+
+    @Test
+    public void testPlayerPoints() {
+
+        assertEquals(0, zora.getPoints(game));
+        assertEquals(0, pris.getPoints(game));
+        assertEquals(0, deckard.getPoints(game));
+
+        zora.addGameEvent(new GameEvent(game, GameEvent.GOAL));
+
+        assertEquals(1, zora.getPoints(game));
+        assertEquals(0, pris.getPoints(game));
+        assertEquals(0, deckard.getPoints(game));
+
+        pris.addGameEvent(new GameEvent(game, GameEvent.ASSIST));
+        deckard.addGameEvent(new GameEvent(game, GameEvent.GOAL));
+        pris.addGameEvent(new GameEvent(game, GameEvent.GOAL));
+
+        assertEquals(1, zora.getPoints(game));
+        assertEquals(2, pris.getPoints(game));
+        assertEquals(1, deckard.getPoints(game));
+
+        assertEquals(2, replicants.getScore());
+        assertEquals(1, bladerunners.getScore());
+    }
+
 }

@@ -15,7 +15,8 @@ import java.util.Date;
 @Entity
 public class GameEvent {
 
-    public static final int SCORE = 0;
+    public static final int GOAL = 0;
+    public static final int ASSIST = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -31,23 +32,13 @@ public class GameEvent {
     @XmlAttribute
     private Date eventTime;
 
-    //TODO: clean up constructors
     public GameEvent() {
-    }
-
-    public GameEvent(int eventType) {
-        this.eventType = eventType;
-        this.eventTime = new Date();
-    }
-
-    public GameEvent(Date eventTime, int eventType) {
-        this.eventTime = eventTime;
-        this.eventType = eventType;
     }
 
     public GameEvent(Game game, int eventType) {
         this.game = game;
         this.eventType = eventType;
+        this.eventTime = new Date();
     }
 
     public Game getGame() {

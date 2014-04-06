@@ -1,5 +1,7 @@
 package com.clowndata.model;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -33,6 +35,7 @@ public class Player {
     @XmlAttribute
     private Boolean active;
 
+    @JsonIgnore
     @OneToMany
     private List<GameEvent> gameEvents;
 
@@ -70,10 +73,25 @@ public class Player {
         return gameEvents;
     }
 
-    public void addGameEvent(Game game, GameEvent gameEvent) {
-        if (gameEvent.getEventType() == GameEvent.SCORE) {
-            game.increaseScoreForTeamWithPlayer(this);
+    public void addGameEvent(GameEvent gameEvent) {
+        if (gameEvent.getEventType() == GameEvent.GOAL) {
+            gameEvent.getGame().increaseScoreForTeamWithPlayer(this);
         }
         this.gameEvents.add(gameEvent);
+    }
+
+    public int getPoints(Game game) {
+
+        int points = 0;
+
+        for (GameEvent gameEvent : getGameEvents()) {
+            if (gameEvent.getGame().equals(game)) {
+                if ((gameEvent.getEventType() == GameEvent.GOAL) || (gameEvent.getEventType() == GameEvent.ASSIST)) {
+                    points++;
+                }
+            }
+        }
+
+        return points;
     }
 }
