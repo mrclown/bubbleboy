@@ -80,6 +80,21 @@ public class Player {
         this.gameEvents.add(gameEvent);
     }
 
+    public int getGoals(Game game) {
+
+        int goals = 0;
+
+        for (GameEvent gameEvent : getGameEvents()) {
+            if (gameEvent.getGame().equals(game)) {
+                if (gameEvent.getEventType() == GameEvent.GOAL) {
+                    goals++;
+                }
+            }
+        }
+
+        return goals;
+    }
+
     public int getPoints(Game game) {
 
         int points = 0;

@@ -31,7 +31,6 @@ public class GameResource {
     @Inject
     private GameRepository gameRepository;
 
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllGames() {

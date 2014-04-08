@@ -49,6 +49,7 @@ public class Team {
     }
 
     public void addPlayer(Player player) {
+        //TODO: Do not allow two players with same name
         players.add(player);
     }
 
@@ -67,4 +68,5 @@ public class Team {
     public void increaseScore() {
         this.score++;
     }
+
 }

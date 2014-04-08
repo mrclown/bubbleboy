@@ -4,6 +4,7 @@ import com.clowndata.model.Game;
 import com.clowndata.model.GameEvent;
 import com.clowndata.model.Player;
 import com.clowndata.model.Team;
+import com.clowndata.model.valueobject.GameSummary;
 import com.clowndata.repository.GameRepository;
 import com.clowndata.repository.PlayerRepository;
 
@@ -56,5 +57,19 @@ public class GameService {
             }
         }
         return playerRepository.deletePlayer(playerId);
+    }
+
+    public GameSummary getGameSummary(Long gameId) {
+
+        Game game = gameRepository.getGame(gameId);
+
+        if (game == null) {
+            //TODO: return Response.Status.NOT_FOUND, not IllegalException
+            throw new IllegalStateException("Invalid gameId: " + gameId);
+        }
+
+        GameSummary gameSummary = new GameSummary(game);
+
+        return gameSummary;
     }
 }

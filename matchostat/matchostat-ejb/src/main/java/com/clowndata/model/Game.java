@@ -82,6 +82,16 @@ public class Game {
     }
 
     @JsonDeserialize(using = DateDeserializer.class)
+    public void setGameEnd(Date gameEnd) {
+        this.gameEnd = gameEnd;
+    }
+
+    @JsonSerialize(using = DateSerializer.class)
+    public Date getGameEnd() {
+        return gameEnd;
+    }
+
+    @JsonDeserialize(using = DateDeserializer.class)
     public void setGameStart(Date gameStart) {
         this.gameStart = gameStart;
     }
