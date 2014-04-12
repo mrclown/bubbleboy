@@ -88,9 +88,13 @@ public class PlayerResource {
     @Path("{id}")
     public Response deletePlayer(@PathParam("id") String id) {
 
-        if (!gameService.deletePlayer(Long.parseLong(id))) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        // Currently not possible to delete a player
+        // Reason: This player may have a goal with connected
+        // assists and it would be complex to handle
+
+//        if (!gameService.deletePlayer(Long.parseLong(id))) {
+//            return Response.status(Response.Status.NOT_FOUND).build();
+//        }
 
         return Response.noContent().build();
     }

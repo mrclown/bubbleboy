@@ -32,7 +32,14 @@ public class GameEvent {
     @XmlAttribute
     private Date eventTime;
 
+    @OneToOne
+    protected GameEvent gameEventLink;
+
     public GameEvent() {
+    }
+
+    public GameEvent(Long id) {
+        this.id = id;
     }
 
     public GameEvent(Game game, int eventType) {
@@ -67,5 +74,13 @@ public class GameEvent {
 
     public Long getId() {
         return id;
+    }
+
+    public GameEvent getGameEventLink() {
+        return gameEventLink;
+    }
+
+    public void setGameEventLink(GameEvent gameEventLink) {
+        this.gameEventLink = gameEventLink;
     }
 }

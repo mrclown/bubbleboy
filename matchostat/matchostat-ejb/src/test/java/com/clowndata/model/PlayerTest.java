@@ -1,5 +1,7 @@
 package com.clowndata.model;
 
+import com.clowndata.model.valueobject.GameEventAssist;
+import com.clowndata.model.valueobject.GameEventGoal;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,12 +13,12 @@ import static org.junit.Assert.assertEquals;
 public class PlayerTest {
 
 
-    Game game;
-    Team replicants;
-    Team bladerunners;
-    Player zora;
-    Player pris;
-    Player deckard;
+    private Game game;
+    private Team replicants;
+    private Team bladerunners;
+    private Player zora;
+    private Player pris;
+    private Player deckard;
 
     @Before
     public void createTestData() {
@@ -36,7 +38,7 @@ public class PlayerTest {
     }
 
     @Test
-    public void testPlayerScores() {
+    public void testTeamScores() {
 
         assertEquals(0, replicants.getScore());
         assertEquals(0, bladerunners.getScore());
@@ -80,6 +82,26 @@ public class PlayerTest {
 
         assertEquals(2, replicants.getScore());
         assertEquals(1, bladerunners.getScore());
+    }
+
+    @Test
+    public void testPlayerGoalAndAssists() {
+
+        assertEquals(0, zora.getPoints(game));
+        assertEquals(0, pris.getPoints(game));
+        assertEquals(0, deckard.getPoints(game));
+
+        GameEventGoal goal = new GameEventGoal(game);
+        zora.addGameEvent(goal);
+        GameEvent assist = new GameEventAssist(game, goal);
+        pris.addGameEvent(assist);
+
+        assertEquals(1, zora.getPoints(game));
+        assertEquals(1, pris.getPoints(game));
+        assertEquals(0, deckard.getPoints(game));
+
+        assertEquals(1, replicants.getScore());
+        assertEquals(0, bladerunners.getScore());
     }
 
 }

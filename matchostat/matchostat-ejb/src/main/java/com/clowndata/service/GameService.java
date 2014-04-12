@@ -32,7 +32,6 @@ public class GameService {
             throw new IllegalStateException("Invalid playerId: " + playerId);
         }
 
-
         Game game = gameRepository.getGame(gameId);
         if (game == null) {
             throw new IllegalStateException("Invalid gameId: " + gameId);
