@@ -13,7 +13,7 @@ import java.util.Date;
 @XmlRootElement
 public class GameSummary {
 
-    @XmlTransient
+    @XmlAttribute
     private long durationInSeconds;
 
     @XmlAttribute
