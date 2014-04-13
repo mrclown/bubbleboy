@@ -74,6 +74,8 @@ public class Player {
     }
 
     public void addGameEvent(GameEvent gameEvent) {
+        //todo: prevent assist without a event link to
+        // a goal to a player within the same team
         if (gameEvent.getEventType() == GameEvent.GOAL) {
             gameEvent.getGame().increaseScoreForTeamWithPlayer(this);
         }

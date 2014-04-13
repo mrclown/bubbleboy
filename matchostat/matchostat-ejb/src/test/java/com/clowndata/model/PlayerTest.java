@@ -5,6 +5,7 @@ import com.clowndata.model.valueobject.GameEventGoal;
 import org.junit.Before;
 import org.junit.Test;
 
+import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -84,6 +85,7 @@ public class PlayerTest {
         assertEquals(1, bladerunners.getScore());
     }
 
+    //Todo: Delete this?
     @Test
     public void testPlayerGoalAndAssists() {
 
@@ -102,6 +104,20 @@ public class PlayerTest {
 
         assertEquals(1, replicants.getScore());
         assertEquals(0, bladerunners.getScore());
+    }
+
+
+    @Test
+    public void testMostAssistFromOnePlayerToAnother() {
+
+       // assertNull(replicants.getMostAssistFromOnePlayerToAnother());
+       // assertNull(bladerunners.getMostAssistFromOnePlayerToAnother());
+
+        GameEventGoal goal = new GameEventGoal(game);
+        zora.addGameEvent(goal);
+        GameEvent assist = new GameEventAssist(game, goal);
+        pris.addGameEvent(assist);
+
     }
 
 }
