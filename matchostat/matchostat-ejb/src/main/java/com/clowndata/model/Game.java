@@ -53,6 +53,7 @@ public class Game {
         this.team1 = team1;
         this.team2 = team2;
         this.gameStart = gameStart;
+        this.gameEnd = null;
     }
 
     public void setTeam1(Team team1) {
@@ -94,6 +95,14 @@ public class Game {
     @JsonDeserialize(using = DateDeserializer.class)
     public void setGameStart(Date gameStart) {
         this.gameStart = gameStart;
+    }
+
+    public boolean isGameEnded() {
+        return this.gameEnd != null;
+    }
+
+    public boolean isWithinGame(Date time) {
+        return ((gameStart.getTime() <= time.getTime())) && ((gameEnd == null) || (gameEnd.getTime() >= time.getTime()));
     }
 
     public void increaseScoreForTeam(Player player) {

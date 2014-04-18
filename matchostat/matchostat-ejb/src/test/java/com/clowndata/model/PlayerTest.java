@@ -2,8 +2,11 @@ package com.clowndata.model;
 
 import com.clowndata.model.valueobject.GameEventAssist;
 import com.clowndata.model.valueobject.GameEventGoal;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Date;
 
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertFalse;

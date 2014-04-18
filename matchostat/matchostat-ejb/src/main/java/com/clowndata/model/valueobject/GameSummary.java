@@ -29,16 +29,17 @@ public class GameSummary {
         team1Summary = new TeamSummary(game.getTeam1(), game);
         team2Summary = new TeamSummary(game.getTeam2(), game);
 
+        gameEnded = game.isGameEnded();
+
         long endTime = 0;
-        if (game.getGameEnd() == null) {
+        if (!gameEnded) {
             Date now = new Date();
             endTime = now.getTime();
-            gameEnded = false;
         } else {
             endTime = game.getGameEnd().getTime();
-            gameEnded = true;
         }
         durationInSeconds = (endTime - game.getGameStart().getTime()) / 1000;
+
     }
 
     public long getDurationInSeconds() {

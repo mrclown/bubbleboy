@@ -1,5 +1,8 @@
 package com.clowndata.model;
 
+import com.clowndata.util.DateSerializer;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -44,15 +47,28 @@ public class GameEvent {
     }
 
     public GameEvent(Game game, int eventType) {
-        this(game, eventType, null);
+        this(game, eventType, new Date(), null);
+    }
+
+    public GameEvent(Game game, int eventType, Date eventTime) {
+        this(game, eventType, eventTime, null);
     }
 
     public GameEvent(Game game, int eventType, GameEvent gameEventLink) {
+        this(game, eventType, new Date(), gameEventLink);
+    }
+
+    private GameEvent(Game game, int eventType, Date eventTime, GameEvent gameEventLink) {
+
+        if (!game.isWithinGame(eventTime)) {
+            //Todo: fix exception
+            throw new IllegalStateException();
+        }
+
         this.game = game;
         this.eventType = eventType;
         this.gameEventLink = gameEventLink;
-        this.eventTime = new Date();
-
+        this.eventTime = eventTime;
     }
 
     public Game getGame() {
@@ -71,10 +87,12 @@ public class GameEvent {
         this.eventType = eventType;
     }
 
+    //    @JsonSerialize(using = DateSerializer.class)
     public Date getEventTime() {
         return eventTime;
     }
 
+    //    @JsonSerialize(using = DateSerializer.class)
     public void setEventTime(Date eventTime) {
         this.eventTime = eventTime;
     }

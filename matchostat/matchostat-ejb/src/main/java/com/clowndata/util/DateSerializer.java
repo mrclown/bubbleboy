@@ -13,10 +13,13 @@ import java.util.Date;
  */
 public class DateSerializer extends JsonSerializer<Date> {
 
-    public static String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 
     @Override
     public void serialize(Date date, org.codehaus.jackson.JsonGenerator jgen, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+//Todo: rewrite using java 8
+        SimpleDateFormat s = new SimpleDateFormat(DATE_TIME_FORMAT);
+        System.out.println(s.format(date));
         jgen.writeString(new SimpleDateFormat(DATE_TIME_FORMAT).format(date));
     }
 
