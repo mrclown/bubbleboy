@@ -1,5 +1,6 @@
 package com.clowndata.service;
 
+import com.clowndata.exception.ObjectNotFoundException;
 import com.clowndata.model.Game;
 import com.clowndata.model.GameEvent;
 import com.clowndata.model.Player;
@@ -10,6 +11,7 @@ import com.clowndata.repository.PlayerRepository;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.xml.ws.http.HTTPException;
 import java.util.List;
 
 /**
@@ -29,11 +31,12 @@ public class GameService {
 
         Player player = playerRepository.getPlayer(playerId);
         if (player == null) {
-            throw new IllegalStateException("Invalid playerId: " + playerId);
+            throw new ObjectNotFoundException(playerId, Player.class);
         }
 
         Game game = gameRepository.getGame(gameId);
         if (game == null) {
+//todo: fix exception
             throw new IllegalStateException("Invalid gameId: " + gameId);
         }
 
