@@ -96,11 +96,21 @@ public class Game {
         this.gameStart = gameStart;
     }
 
-    public void increaseScoreForTeamWithPlayer(Player player) {
+    public void increaseScoreForTeam(Player player) {
         if (team1.getPlayers().contains(player)) {
             team1.increaseScore();
         } else if (team2.getPlayers().contains(player)) {
             team2.increaseScore();
+        } else {
+            //TODO log
+        }
+    }
+
+    public void increaseScoreForOppositeTeam(Player player) {
+        if (team1.getPlayers().contains(player)) {
+            team2.increaseScore();
+        } else if (team2.getPlayers().contains(player)) {
+            team1.increaseScore();
         } else {
             //TODO log
         }

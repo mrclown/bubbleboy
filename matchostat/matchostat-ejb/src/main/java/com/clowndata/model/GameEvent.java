@@ -17,6 +17,7 @@ public class GameEvent {
 
     public static final int GOAL = 0;
     public static final int ASSIST = 1;
+    public static final int OWNGOAL = 2;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

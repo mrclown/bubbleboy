@@ -84,7 +84,7 @@ public class Player {
 
         switch (gameEvent.getEventType()) {
             case GameEvent.GOAL:
-                gameEvent.getGame().increaseScoreForTeamWithPlayer(this);
+                gameEvent.getGame().increaseScoreForTeam(this);
                 // a goal cannot be linked
                 gameEvent.setGameEventLink(null);
                 break;
@@ -101,6 +101,11 @@ public class Player {
                         log.error("The assist must be to a player within the same team and same game");
                     }
                 }
+                break;
+            case GameEvent.OWNGOAL:
+                gameEvent.getGame().increaseScoreForOppositeTeam(this);
+                // an own goal cannot be linked
+                gameEvent.setGameEventLink(null);
                 break;
             default:
 

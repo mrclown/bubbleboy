@@ -86,6 +86,15 @@ public class PlayerTest {
 
         assertEquals(2, replicants.getScore());
         assertEquals(1, bladerunners.getScore());
+
+        deckard.addGameEvent(new GameEvent(game, GameEvent.OWNGOAL));
+
+        assertEquals(1, zora.getPoints(game));
+        assertEquals(2, pris.getPoints(game));
+        assertEquals(1, deckard.getPoints(game));
+
+        assertEquals(3, replicants.getScore());
+        assertEquals(1, bladerunners.getScore());
     }
 
     //Todo: Delete this?
