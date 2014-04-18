@@ -1,6 +1,8 @@
 package com.clowndata.model;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -21,6 +23,9 @@ import java.util.List;
 @Entity
 @NamedQuery(name = "Player.findAll", query = "SELECT p FROM Player p")
 public class Player {
+
+    @Transient
+    final Logger log = LoggerFactory.getLogger(Player.class);
 
     @XmlAttribute
     @Id
@@ -73,13 +78,39 @@ public class Player {
         return gameEvents;
     }
 
-    public void addGameEvent(GameEvent gameEvent) {
-        //todo: prevent assist without a event link to
-        // a goal to a player within the same team
-        if (gameEvent.getEventType() == GameEvent.GOAL) {
-            gameEvent.getGame().increaseScoreForTeamWithPlayer(this);
+    public boolean addGameEvent(GameEvent gameEvent) {
+
+        boolean addEvent = true;
+
+        switch (gameEvent.getEventType()) {
+            case GameEvent.GOAL:
+                gameEvent.getGame().increaseScoreForTeamWithPlayer(this);
+                // a goal cannot be linked
+                gameEvent.setGameEventLink(null);
+                break;
+            case GameEvent.ASSIST:
+                this.getGameEvents().size();
+                GameEvent linkedEvent = gameEvent.getGameEventLink();
+                if ((linkedEvent == null) || (linkedEvent.getEventType() != gameEvent.GOAL)) {
+                    addEvent = false;
+                    log.error("The assist by player: " + this.getName() + " id: " + this.getId() + " is not linked to a goal");
+                } else {
+                    Game game = linkedEvent.getGame();
+                    if (!game.areEventsByPlayersWithinTheSameTeam(gameEvent, linkedEvent)) {
+                        addEvent = false;
+                        log.error("The assist must be to a player within the same team and same game");
+                    }
+                }
+                break;
+            default:
+
         }
-        this.gameEvents.add(gameEvent);
+
+        if (addEvent) {
+            this.gameEvents.add(gameEvent);
+        }
+
+        return addEvent;
     }
 
     public int getGoals(Game game) {
@@ -110,5 +141,10 @@ public class Player {
         }
 
         return points;
+    }
+
+    @JsonIgnore
+    public boolean isDeletable() {
+        return ((this.gameEvents == null) || (this.gameEvents.size() == 0));
     }
 }

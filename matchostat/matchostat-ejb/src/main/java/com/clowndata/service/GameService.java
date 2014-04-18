@@ -37,6 +37,11 @@ public class GameService {
             throw new IllegalStateException("Invalid gameId: " + gameId);
         }
 
+        if(gameEvent.getGameEventLink() != null){
+            GameEvent gameEventLink = playerRepository.getPlayerGameEvent(gameEvent.getGameEventLink().getId());
+            gameEvent.setGameEventLink(gameEventLink);
+        }
+
         gameEvent.setGame(game);
 
         player.addGameEvent(gameEvent);

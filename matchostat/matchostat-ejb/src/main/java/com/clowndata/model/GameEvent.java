@@ -43,9 +43,15 @@ public class GameEvent {
     }
 
     public GameEvent(Game game, int eventType) {
+        this(game, eventType, null);
+    }
+
+    public GameEvent(Game game, int eventType, GameEvent gameEventLink) {
         this.game = game;
         this.eventType = eventType;
+        this.gameEventLink = gameEventLink;
         this.eventTime = new Date();
+
     }
 
     public Game getGame() {

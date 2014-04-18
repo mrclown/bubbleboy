@@ -105,4 +105,11 @@ public class Game {
             //TODO log
         }
     }
+
+    public boolean areEventsByPlayersWithinTheSameTeam(GameEvent event1, GameEvent event2) {
+
+        boolean sameTeam = true;
+
+        return sameTeam;
+    }
 }

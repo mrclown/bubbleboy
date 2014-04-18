@@ -48,12 +48,13 @@ public class GameSummaryTest {
 
         //Team2 events
         karl.addGameEvent(new GameEvent(game, GameEvent.GOAL));
+        GameEvent goal = new GameEvent(game, GameEvent.GOAL);
+        karl.addGameEvent(goal);
+        wolfgang.addGameEvent(new GameEvent(game, GameEvent.ASSIST, goal));
         karl.addGameEvent(new GameEvent(game, GameEvent.GOAL));
-        wolfgang.addGameEvent(new GameEvent(game, GameEvent.ASSIST));
-        karl.addGameEvent(new GameEvent(game, GameEvent.GOAL));
-        wolfgang.addGameEvent(new GameEvent(game, GameEvent.GOAL));
-        karl.addGameEvent(new GameEvent(game, GameEvent.ASSIST));
-
+        goal = new GameEvent(game, GameEvent.GOAL);
+        wolfgang.addGameEvent(goal);
+        karl.addGameEvent(new GameEvent(game, GameEvent.ASSIST, goal));
 
         GameSummary gameSummary = new GameSummary(game);
 

@@ -18,7 +18,7 @@ import java.util.List;
  * Created by 2014.
  */
 
-@Path("/players/{id:[0-9]*}/games/{gameId:[0-9]*}/events")
+@Path("/players/{playerId:[0-9]*}/games/{gameId:[0-9]*}/events")
 @RequestScoped
 public class GameEventResource {
 
@@ -34,9 +34,10 @@ public class GameEventResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getPlayerGameEvents(@PathParam("id") String id, @PathParam("gameId") String gameId) {
+    public Response getPlayerGameEvents(@PathParam("playerId") String playerId, @PathParam("gameId") String gameId) {
 
-        List<GameEvent> gameEvents = playerRepository.getPlayerGameEvents(Long.parseLong(id), Long.parseLong(gameId));
+        //todo: move code to service
+        List<GameEvent> gameEvents = playerRepository.getPlayerGameEvents(Long.parseLong(playerId), Long.parseLong(gameId));
 
         if (gameEvents == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -48,9 +49,9 @@ public class GameEventResource {
     @POST
     @Produces("text/plain")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response createPlayerGameEvent(@PathParam("id") String id, @PathParam("gameId") String gameId, GameEvent gameEvent) {
+    public Response createPlayerGameEvent(@PathParam("playerId") String playerId, @PathParam("gameId") String gameId, GameEvent gameEvent) {
 
-        Long eventId = gameService.addPlayerGameEvent(Long.parseLong(id), Long.parseLong(gameId), gameEvent);
+        Long eventId = gameService.addPlayerGameEvent(Long.parseLong(playerId), Long.parseLong(gameId), gameEvent);
 
         //TODO: Error handling: no player, no game, illegal event
         URI uri = uriInfo.getAbsolutePathBuilder().path(eventId.toString()).build();

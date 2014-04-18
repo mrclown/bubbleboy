@@ -70,10 +70,14 @@ public class PlayerRepository {
         Player player = em.find(Player.class, id);
 
         if (player != null) {
-            log.info("Deleting player: " + player.getName() + " id: " + id);
-            deletePlayerEvents(player);
-            em.remove(player);
-            deleted = true;
+            if (player.isDeletable()) {
+                log.info("Deleting player: " + player.getName() + " id: " + id);
+                deletePlayerEvents(player);
+                em.remove(player);
+                deleted = true;
+            } else {
+                log.info("Player can not be deleted: " + player.getName() + " id: " + id);
+            }
         } else {
             log.error("Player could not be found id: " + id);
         }
@@ -109,6 +113,16 @@ public class PlayerRepository {
         return gameEvents;
     }
 
+    public GameEvent getPlayerGameEvent(Long gameEventId) {
+
+        GameEvent gameEvent = em.find(GameEvent.class, gameEventId);
+
+        if (gameEvent == null) {
+            log.error("GameEvent could not be found id: " + gameEventId);
+        }
+
+        return gameEvent;
+    }
 
     public Long createGameEvent(GameEvent gameEvent) {
 
