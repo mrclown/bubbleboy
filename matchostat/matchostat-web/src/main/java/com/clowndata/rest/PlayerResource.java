@@ -4,9 +4,12 @@ package com.clowndata.rest;
  * Created 2014.
  */
 
+import com.clowndata.exception.ObjectNotFoundException;
 import com.clowndata.model.Player;
 import com.clowndata.repository.PlayerRepository;
 import com.clowndata.service.GameService;
+import com.clowndata.service.GameServiceImpl;
+import com.clowndata.service.PlayerService;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -29,7 +32,7 @@ public class PlayerResource {
     private GameService gameService;
 
     @Inject
-    private PlayerRepository playerRepository;
+    private PlayerService playerService;
 
     @Context
     UriInfo uriInfo;
@@ -38,7 +41,7 @@ public class PlayerResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllPlayers() {
 
-        List players = playerRepository.getAllPlayers();
+        List players = playerService.getAllPlayers();
 
         return Response.ok().entity(players).build();
     }
@@ -48,11 +51,7 @@ public class PlayerResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPlayer(@PathParam("id") String id) {
 
-        Player player = playerRepository.getPlayer(Long.parseLong(id));
-
-        if (player == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        Player player = playerService.getPlayer(Long.parseLong(id));
 
         return Response.ok().entity(player).build();
     }
@@ -61,7 +60,8 @@ public class PlayerResource {
     @Produces("text/plain")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createPlayer(Player player) {
-        Long id = playerRepository.createPlayer(player);
+
+        Long id = playerService.createPlayer(player);
 
         URI uri = uriInfo.getAbsolutePathBuilder().path(id.toString()).build();
         return Response.created(uri).build();
@@ -73,11 +73,7 @@ public class PlayerResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response putPlayer(@PathParam("id") String id, Player player) {
 
-        Player persistedPlayer = playerRepository.updatePlayer(Long.parseLong(id), player);
-
-        if (persistedPlayer == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        playerService.updatePlayer(Long.parseLong(id), player);
 
         return Response.noContent().build();
     }

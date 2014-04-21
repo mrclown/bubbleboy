@@ -1,5 +1,6 @@
 package com.clowndata.repository;
 
+import com.clowndata.exception.ObjectNotFoundException;
 import com.clowndata.model.GameEvent;
 import com.clowndata.model.Player;
 import org.slf4j.Logger;
@@ -15,7 +16,6 @@ import java.util.List;
  * Created 2014.
  */
 
-@Stateless
 public class PlayerRepository {
 
     final Logger log = LoggerFactory.getLogger(PlayerRepository.class);
@@ -37,6 +37,10 @@ public class PlayerRepository {
 
         Player player = em.find(Player.class, id);
 
+        if (player == null) {
+            throw new ObjectNotFoundException(id, Player.class);
+        }
+
         return player;
     }
 
@@ -47,7 +51,7 @@ public class PlayerRepository {
         return players;
     }
 
-    public Player updatePlayer(Long id, Player player) {
+    public void updatePlayer(Long id, Player player) {
 
         Player persistedPlayer = em.find(Player.class, id);
 
@@ -58,9 +62,8 @@ public class PlayerRepository {
             log.info("Updated player: " + player.getName() + " id: " + id + " active: " + player.getActive());
         } else {
             log.error("Player could not be found id: " + id);
+            throw new ObjectNotFoundException(id, Player.class);
         }
-
-        return persistedPlayer;
     }
 
     public boolean deletePlayer(Long id) {

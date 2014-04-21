@@ -4,10 +4,9 @@ package com.clowndata.rest;
  * Created by 2014.
  */
 
-import com.clowndata.model.Game;
 import com.clowndata.model.valueobject.GameSummary;
-import com.clowndata.repository.GameRepository;
 import com.clowndata.service.GameService;
+import com.clowndata.service.GameServiceImpl;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;

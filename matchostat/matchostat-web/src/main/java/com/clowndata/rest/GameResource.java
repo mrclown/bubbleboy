@@ -7,6 +7,8 @@ package com.clowndata.rest;
 import com.clowndata.model.Game;
 import com.clowndata.model.Team;
 import com.clowndata.repository.GameRepository;
+import com.clowndata.service.GameService;
+import com.clowndata.service.GameServiceImpl;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -29,13 +31,13 @@ public class GameResource {
     UriInfo uriInfo;
 
     @Inject
-    private GameRepository gameRepository;
+    GameService gameService;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllGames() {
 
-        List<Game> games = gameRepository.getAllGames();
+        List<Game> games = gameService.getAllGames();
 
         return Response.ok().entity(games).build();
     }
@@ -45,11 +47,7 @@ public class GameResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getGame(@PathParam("id") String id) {
 
-        Game game = gameRepository.getGame(Long.parseLong(id));
-
-        if (game == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        Game game = gameService.getGame(Long.parseLong(id));
 
         return Response.ok().entity(game).build();
     }
@@ -59,7 +57,7 @@ public class GameResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createGame(Game game) {
 
-        Long id = gameRepository.createGame(game);
+        Long id = gameService.createGame(game);
 
         URI uri = uriInfo.getAbsolutePathBuilder().path(id.toString()).build();
         return Response.created(uri).build();
@@ -71,7 +69,7 @@ public class GameResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response putGame(@PathParam("id") String id, Game game) {
 
-        gameRepository.updateGame(Long.parseLong(id), game);
+        gameService.updateGame(Long.parseLong(id), game);
 
         //TODO: implement conflict (409)?
         //TODO: implement not found (404)
@@ -84,24 +82,8 @@ public class GameResource {
     @Consumes("text/plain")
     public Response deleteGame(@PathParam("id") String id) {
 
-        if (!gameRepository.deleteGame(Long.parseLong(id))) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        gameService.deleteGame(Long.parseLong(id));
 
         return Response.noContent().build();
-    }
-
-
-    @GET
-    @Path("{id}/teams")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getTeams(@PathParam("id") String id) {
-        List<Team> teams = gameRepository.getTeams(new Long(id));
-
-        if (teams == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
-
-        return Response.ok().entity(teams).build();
     }
 }

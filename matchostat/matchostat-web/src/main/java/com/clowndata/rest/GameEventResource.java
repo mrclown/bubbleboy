@@ -3,6 +3,8 @@ package com.clowndata.rest;
 import com.clowndata.model.GameEvent;
 import com.clowndata.repository.PlayerRepository;
 import com.clowndata.service.GameService;
+import com.clowndata.service.GameServiceImpl;
+import com.clowndata.service.PlayerService;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -26,22 +28,22 @@ public class GameEventResource {
     private GameService gameService;
 
     @Inject
-    private PlayerRepository playerRepository;
+    private PlayerService playerService;
 
     @Context
     UriInfo uriInfo;
-
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPlayerGameEvents(@PathParam("playerId") String playerId, @PathParam("gameId") String gameId) {
 
         //todo: move code to service
-        List<GameEvent> gameEvents = playerRepository.getPlayerGameEvents(Long.parseLong(playerId), Long.parseLong(gameId));
+        List<GameEvent> gameEvents = playerService.getPlayerGameEvents(Long.parseLong(playerId), Long.parseLong(gameId));
 
-        if (gameEvents == null) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        //todo: add test case
+//        if (gameEvents == null) {
+//            return Response.status(Response.Status.NOT_FOUND).build();
+//        }
 
         return Response.ok().entity(gameEvents).build();
     }

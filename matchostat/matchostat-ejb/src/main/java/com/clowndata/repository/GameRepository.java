@@ -1,5 +1,6 @@
 package com.clowndata.repository;
 
+import com.clowndata.exception.ObjectNotFoundException;
 import com.clowndata.model.Game;
 import com.clowndata.model.Player;
 import com.clowndata.model.Team;
@@ -16,8 +17,6 @@ import java.util.Set;
 /**
  * Created 2014.
  */
-
-@Stateless
 public class GameRepository {
 
 
@@ -51,6 +50,10 @@ public class GameRepository {
 
     public Game getGame(Long id) {
         Game game = em.find(Game.class, id);
+
+        if(game == null){
+            throw new ObjectNotFoundException(id, Game.class);
+        }
 
         eagerFetch(game);
 
@@ -103,19 +106,15 @@ public class GameRepository {
         return persistedGame;
     }
 
-    public boolean deleteGame(Long id) {
-
-        Boolean deleted = false;
+    public void deleteGame(Long id) {
 
         Game game = em.find(Game.class, id);
 
-        if (game != null) {
-            deleteTeams(game);
-            em.remove(game);
-            deleted = true;
+        if (game == null) {
+            throw new ObjectNotFoundException(id, Game.class);
         }
-
-        return deleted;
+        deleteTeams(game);
+        em.remove(game);
     }
 
     private void deleteTeams(Game game) {
