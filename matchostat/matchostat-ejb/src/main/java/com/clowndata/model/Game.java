@@ -8,6 +8,8 @@ import com.clowndata.util.DateDeserializer;
 import com.clowndata.util.DateSerializer;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -21,6 +23,9 @@ import java.util.Date;
 @Entity
 @NamedQuery(name = "Game.findAll", query = "SELECT g FROM Game g")
 public class Game {
+
+    @Transient
+    final Logger log = LoggerFactory.getLogger(Game.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -105,30 +110,35 @@ public class Game {
         return ((gameStart.getTime() <= time.getTime())) && ((gameEnd == null) || (gameEnd.getTime() >= time.getTime()));
     }
 
-    public void increaseScoreForTeam(Player player) {
-        if (team1.getPlayers().contains(player)) {
-            team1.increaseScore();
-        } else if (team2.getPlayers().contains(player)) {
+    public void increaseScoreForOppositeTeam(Team team) {
+        if (team.equals(team1)) {
             team2.increaseScore();
         } else {
-            //TODO log
+            team1.increaseScore();
         }
     }
 
-    public void increaseScoreForOppositeTeam(Player player) {
-        if (team1.getPlayers().contains(player)) {
-            team2.increaseScore();
-        } else if (team2.getPlayers().contains(player)) {
-            team1.increaseScore();
-        } else {
-            //TODO log
+    public boolean isEventByPlayerWithinTheSameTeam(Team team, GameEvent event) {
+
+        Team eventTeam = null;
+
+        if (team1.isEventByPlayerInTeam(event)) {
+            eventTeam = team1;
+        } else if (team2.isEventByPlayerInTeam(event)) {
+            eventTeam = team2;
         }
+        return team.equals(eventTeam);
     }
 
-    public boolean areEventsByPlayersWithinTheSameTeam(GameEvent event1, GameEvent event2) {
+    public Team getTeamWithPlayer(Player player) {
 
-        boolean sameTeam = true;
+        Team team = null;
 
-        return sameTeam;
+        if (team1.getPlayers().contains(player)) {
+            team = team1;
+        } else if (team2.getPlayers().contains(player)) {
+            team = team2;
+        }
+        return team;
     }
 }

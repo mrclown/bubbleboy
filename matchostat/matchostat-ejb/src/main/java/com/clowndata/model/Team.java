@@ -69,4 +69,16 @@ public class Team {
         this.score++;
     }
 
+    public boolean isEventByPlayerInTeam(GameEvent gameEvent) {
+        boolean result = false;
+
+        for (Player player : players) {
+            if (player.hasEvent(gameEvent)) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
+    }
 }

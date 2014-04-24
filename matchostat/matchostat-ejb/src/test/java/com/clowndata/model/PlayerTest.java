@@ -147,4 +147,21 @@ public class PlayerTest {
         assertTrue(pris.isDeletable());
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void testNotPossibleToAssistPlayerInOtherTeam() {
+
+        GameEvent goal = new GameEvent(game, GameEvent.GOAL);
+        pris.addGameEvent(goal);
+        deckard.addGameEvent(new GameEvent(game, GameEvent.ASSIST, goal));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testNotPossibleToAssistPlayerNotInGame() {
+
+        GameEvent goal = new GameEvent(game, GameEvent.GOAL);
+        pris.addGameEvent(goal);
+
+        Player sebastian = new Player("Sebastian");
+        sebastian.addGameEvent(new GameEvent(game, GameEvent.ASSIST, goal));
+    }
 }

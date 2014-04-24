@@ -78,44 +78,43 @@ public class Player {
         return gameEvents;
     }
 
-    public boolean addGameEvent(GameEvent gameEvent) {
+    public void addGameEvent(GameEvent gameEvent) {
 
-        boolean addEvent = true;
+        Team team = gameEvent.getGame().getTeamWithPlayer(this);
 
+        if (team == null) {
+            throw new IllegalStateException("Player id: " + this.id + " is not in the Game: " + gameEvent.getGame().getId());
+        }
         switch (gameEvent.getEventType()) {
             case GameEvent.GOAL:
-                gameEvent.getGame().increaseScoreForTeam(this);
+                team.increaseScore();
                 // a goal cannot be linked
                 gameEvent.setGameEventLink(null);
                 break;
             case GameEvent.ASSIST:
-                this.getGameEvents().size();
                 GameEvent linkedEvent = gameEvent.getGameEventLink();
                 if ((linkedEvent == null) || (linkedEvent.getEventType() != gameEvent.GOAL)) {
-                    addEvent = false;
-                    log.error("The assist by player: " + this.getName() + " id: " + this.getId() + " is not linked to a goal");
+                    String msg = "The assist by player: " + this.getName() + " id: " + this.getId() + " is not linked to a goal";
+                    log.error(msg);
+                    throw new IllegalStateException(msg);
                 } else {
                     Game game = linkedEvent.getGame();
-                    if (!game.areEventsByPlayersWithinTheSameTeam(gameEvent, linkedEvent)) {
-                        addEvent = false;
-                        log.error("The assist must be to a player within the same team and same game");
+                    if (!game.isEventByPlayerWithinTheSameTeam(team, linkedEvent)) {
+                        String msg = "The assist by player: " + this.getName() + " id: " + this.getId() + " is not to a player in the same team";
+                        log.error(msg);
+                        throw new IllegalStateException(msg);
                     }
                 }
                 break;
             case GameEvent.OWNGOAL:
-                gameEvent.getGame().increaseScoreForOppositeTeam(this);
+                gameEvent.getGame().increaseScoreForOppositeTeam(team);
                 // an own goal cannot be linked
                 gameEvent.setGameEventLink(null);
                 break;
             default:
 
         }
-
-        if (addEvent) {
-            this.gameEvents.add(gameEvent);
-        }
-
-        return addEvent;
+        this.gameEvents.add(gameEvent);
     }
 
     public int getGoals(Game game) {
@@ -151,5 +150,9 @@ public class Player {
     @JsonIgnore
     public boolean isDeletable() {
         return ((this.gameEvents == null) || (this.gameEvents.size() == 0));
+    }
+
+    public boolean hasEvent(GameEvent gameEvent) {
+        return gameEvents.contains(gameEvent);
     }
 }

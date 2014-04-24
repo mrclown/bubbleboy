@@ -43,15 +43,19 @@ public class GameRepository {
     private void eagerFetch(Game game) {
 
         if (game != null) {
-            game.getTeam1().getPlayers().size();
-            game.getTeam2().getPlayers().size();
+            if (game.getTeam1() != null) {
+                game.getTeam1().getPlayers().size();
+            }
+            if (game.getTeam2() != null) {
+                game.getTeam2().getPlayers().size();
+            }
         }
     }
 
     public Game getGame(Long id) {
         Game game = em.find(Game.class, id);
 
-        if(game == null){
+        if (game == null) {
             throw new ObjectNotFoundException(id, Game.class);
         }
 
