@@ -84,12 +84,7 @@ public class PlayerResource {
     @Path("{id}")
     public Response deletePlayer(@PathParam("id") String id) {
 
-
-        if (!gameService.deletePlayer(Long.parseLong(id))) {
-//todo: not always true. if player not deletable above will return false
-            // http 403 would be more appropriate
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        gameService.deletePlayer(Long.parseLong(id));
 
         return Response.noContent().build();
     }

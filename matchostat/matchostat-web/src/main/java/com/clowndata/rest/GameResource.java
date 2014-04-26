@@ -71,8 +71,6 @@ public class GameResource {
 
         gameService.updateGame(Long.parseLong(id), game);
 
-        //TODO: implement conflict (409)?
-        //TODO: implement not found (404)
         return Response.noContent().build();
     }
 

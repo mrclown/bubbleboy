@@ -5,7 +5,7 @@ package com.clowndata.exception;
  */
 public class ObjectNotFoundException extends RuntimeException {
 
-    public ObjectNotFoundException(Long id, Class className) {
-        super(className.getSimpleName()+ " id: " + id.toString() + " not found");
+    public ObjectNotFoundException(Class className, Long id) {
+        super(className.getSimpleName() + " id: " + id.toString() + " not found");
     }
 }

@@ -38,7 +38,7 @@ public class PlayerRepository {
         Player player = em.find(Player.class, id);
 
         if (player == null) {
-            throw new ObjectNotFoundException(id, Player.class);
+            throw new ObjectNotFoundException(Player.class, id);
         }
 
         return player;
@@ -62,30 +62,27 @@ public class PlayerRepository {
             log.info("Updated player: " + player.getName() + " id: " + id + " active: " + player.getActive());
         } else {
             log.error("Player could not be found id: " + id);
-            throw new ObjectNotFoundException(id, Player.class);
+            throw new ObjectNotFoundException(Player.class, id);
         }
     }
 
-    public boolean deletePlayer(Long id) {
-
-        Boolean deleted = false;
+    public void deletePlayer(Long id) {
 
         Player player = em.find(Player.class, id);
 
-        if (player != null) {
-            if (player.isDeletable()) {
-                log.info("Deleting player: " + player.getName() + " id: " + id);
-                deletePlayerEvents(player);
-                em.remove(player);
-                deleted = true;
-            } else {
-                log.info("Player can not be deleted: " + player.getName() + " id: " + id);
-            }
-        } else {
-            log.error("Player could not be found id: " + id);
+        if (player == null) {
+            throw new ObjectNotFoundException(Player.class, id);
         }
 
-        return deleted;
+        if (!player.isDeletable()) {
+            String msg = "Player can not be deleted: " + player.getName() + " id: " + id;
+            log.error(msg);
+            throw new IllegalStateException(msg);
+        }
+
+        log.info("Deleting player: " + player.getName() + " id: " + id);
+        deletePlayerEvents(player);
+        em.remove(player);
     }
 
     private void deletePlayerEvents(Player player) {

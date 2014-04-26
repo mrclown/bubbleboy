@@ -8,9 +8,12 @@ import com.clowndata.model.Team;
 import com.clowndata.model.valueobject.GameSummary;
 import com.clowndata.repository.GameRepository;
 import com.clowndata.repository.PlayerRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.Transient;
 import javax.xml.ws.http.HTTPException;
 import java.util.List;
 
@@ -26,6 +29,9 @@ public class GameServiceImpl implements GameService {
 
     @Inject
     private GameRepository gameRepository;
+
+    @Transient
+    final Logger log = LoggerFactory.getLogger(GameServiceImpl.class);
 
     @Override
     public List<Game> getAllGames() {
@@ -55,15 +61,8 @@ public class GameServiceImpl implements GameService {
     public Long addPlayerGameEvent(Long playerId, Long gameId, GameEvent gameEvent) {
 
         Player player = playerRepository.getPlayer(playerId);
-        if (player == null) {
-            throw new ObjectNotFoundException(playerId, Player.class);
-        }
 
         Game game = gameRepository.getGame(gameId);
-        if (game == null) {
-//todo: fix exception
-            throw new IllegalStateException("Invalid gameId: " + gameId);
-        }
 
         if (gameEvent.getGameEventLink() != null) {
             GameEvent gameEventLink = playerRepository.getPlayerGameEvent(gameEvent.getGameEventLink().getId());
@@ -77,7 +76,7 @@ public class GameServiceImpl implements GameService {
         return playerRepository.createGameEvent(gameEvent);
     }
 
-    public boolean deletePlayer(Long playerId) {
+    public void deletePlayer(Long playerId) {
 
         Player player = playerRepository.getPlayer(playerId);
 
@@ -88,7 +87,7 @@ public class GameServiceImpl implements GameService {
                 team.getPlayers().remove(player);
             }
         }
-        return playerRepository.deletePlayer(playerId);
+        playerRepository.deletePlayer(playerId);
     }
 
     public GameSummary getGameSummary(Long gameId) {

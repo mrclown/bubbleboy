@@ -26,7 +26,7 @@ public interface GameService {
 
     public Long addPlayerGameEvent(Long playerId, Long gameId, GameEvent gameEvent);
 
-    public boolean deletePlayer(Long playerId);
+    public void deletePlayer(Long playerId);
 
     public GameSummary getGameSummary(Long gameId);
 }

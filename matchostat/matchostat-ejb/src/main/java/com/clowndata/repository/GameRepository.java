@@ -4,11 +4,14 @@ import com.clowndata.exception.ObjectNotFoundException;
 import com.clowndata.model.Game;
 import com.clowndata.model.Player;
 import com.clowndata.model.Team;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,6 +29,8 @@ public class GameRepository {
     @PersistenceContext
     private EntityManager em;
 
+    @Transient
+    final Logger log = LoggerFactory.getLogger(GameRepository.class);
 
     public Long createGame(Game game) {
 
@@ -56,7 +61,7 @@ public class GameRepository {
         Game game = em.find(Game.class, id);
 
         if (game == null) {
-            throw new ObjectNotFoundException(id, Game.class);
+            throw new ObjectNotFoundException(Game.class, id);
         }
 
         eagerFetch(game);
@@ -91,22 +96,27 @@ public class GameRepository {
 
         Game persistedGame = em.find(Game.class, id);
 
-        if (persistedGame != null) {
-            Team persistedTeam = persistedGame.getTeam1();
-            if (persistedTeam != null) {
-                updateTeam(persistedTeam, game.getTeam1());
-
-            } else {
-                em.persist(game.getTeam1());
-            }
-
-            persistedTeam = persistedGame.getTeam2();
-            if (persistedTeam != null) {
-                updateTeam(persistedTeam, game.getTeam2());
-            } else {
-                em.persist(game.getTeam2());
-            }
+        if (persistedGame == null) {
+            String msg = "";
+            log.error(msg);
+            throw new ObjectNotFoundException(Game.class, id);
         }
+
+        Team persistedTeam = persistedGame.getTeam1();
+        if (persistedTeam != null) {
+            updateTeam(persistedTeam, game.getTeam1());
+
+        } else {
+            em.persist(game.getTeam1());
+        }
+
+        persistedTeam = persistedGame.getTeam2();
+        if (persistedTeam != null) {
+            updateTeam(persistedTeam, game.getTeam2());
+        } else {
+            em.persist(game.getTeam2());
+        }
+
         return persistedGame;
     }
 
@@ -115,7 +125,7 @@ public class GameRepository {
         Game game = em.find(Game.class, id);
 
         if (game == null) {
-            throw new ObjectNotFoundException(id, Game.class);
+            throw new ObjectNotFoundException(Game.class, id);
         }
         deleteTeams(game);
         em.remove(game);

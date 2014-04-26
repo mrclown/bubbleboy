@@ -83,7 +83,9 @@ public class Player {
         Team team = gameEvent.getGame().getTeamWithPlayer(this);
 
         if (team == null) {
-            throw new IllegalStateException("Player id: " + this.id + " is not in the Game: " + gameEvent.getGame().getId());
+            String msg = "Player id: " + this.id + " is not in the Game: " + gameEvent.getGame().getId();
+            log.error(msg);
+            throw new IllegalStateException(msg);
         }
         switch (gameEvent.getEventType()) {
             case GameEvent.GOAL:
