@@ -37,6 +37,7 @@ public class GameEvent {
     private Date eventTime;
 
     @OneToOne
+    @XmlAttribute
     protected GameEvent gameEventLink;
 
     public GameEvent() {
