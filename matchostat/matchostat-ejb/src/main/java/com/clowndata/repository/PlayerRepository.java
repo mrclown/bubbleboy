@@ -1,6 +1,7 @@
 package com.clowndata.repository;
 
 import com.clowndata.exception.ObjectNotFoundException;
+import com.clowndata.model.Game;
 import com.clowndata.model.GameEvent;
 import com.clowndata.model.Player;
 import org.slf4j.Logger;
@@ -22,7 +23,6 @@ public class PlayerRepository {
 
     @PersistenceContext
     private EntityManager em;
-
 
     public Long createPlayer(Player player) {
 
@@ -99,15 +99,16 @@ public class PlayerRepository {
         List<GameEvent> gameEvents = null;
         Player player = em.find(Player.class, id);
 
-        if (player != null) {
-            gameEvents = new ArrayList();
-            for (GameEvent gameEvent : player.getGameEvents()) {
-                if (gameEvent.getGame().getId() == gameId) {
-                    gameEvents.add(gameEvent);
-                }
-            }
-        } else {
+        if (player == null) {
             log.error("Player could not be found id: " + id);
+            throw new ObjectNotFoundException(Player.class, id);
+        }
+
+        gameEvents = new ArrayList();
+        for (GameEvent gameEvent : player.getGameEvents()) {
+            if (gameEvent.getGame().getId() == gameId) {
+                gameEvents.add(gameEvent);
+            }
         }
 
         return gameEvents;
@@ -119,6 +120,7 @@ public class PlayerRepository {
 
         if (gameEvent == null) {
             log.error("GameEvent could not be found id: " + gameEventId);
+            throw new ObjectNotFoundException(GameEvent.class, gameEventId);
         }
 
         return gameEvent;
@@ -135,21 +137,21 @@ public class PlayerRepository {
 
         Player player = em.find(Player.class, id);
 
-        if (player != null) {
-
-            List<GameEvent> gameEvents = player.getGameEvents();
-            List<GameEvent> gameEventsToDelete = new ArrayList<>();
-
-            for (GameEvent gameEvent : gameEvents) {
-                if (gameEvent.getGame().getId() == gameId) {
-                    gameEventsToDelete.add(gameEvent);
-                }
-            }
-
-            deleteGameEvents(player, gameEventsToDelete);
-        } else {
+        if (player == null) {
             log.error("Player could not be found id: " + id);
+            throw new ObjectNotFoundException(Player.class, id);
         }
+
+        List<GameEvent> gameEvents = player.getGameEvents();
+        List<GameEvent> gameEventsToDelete = new ArrayList<>();
+
+        for (GameEvent gameEvent : gameEvents) {
+            if (gameEvent.getGame().getId() == gameId) {
+                gameEventsToDelete.add(gameEvent);
+            }
+        }
+
+        deleteGameEvents(player, gameEventsToDelete);
     }
 
     private void deleteGameEvents(Player player, List<GameEvent> gameEventsToDelete) {

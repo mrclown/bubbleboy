@@ -42,6 +42,8 @@ public class GameRepository {
 
         em.persist(game);
 
+        log.info("Created Game: " + game.getId());
+
         return game.getId();
     }
 
@@ -116,6 +118,7 @@ public class GameRepository {
         } else {
             em.persist(game.getTeam2());
         }
+        log.info("Updated Game: " + game.getId());
 
         return persistedGame;
     }
@@ -129,6 +132,8 @@ public class GameRepository {
         }
         deleteTeams(game);
         em.remove(game);
+
+        log.info("Deleted Game: " + game.getId());
     }
 
     private void deleteTeams(Game game) {
@@ -150,21 +155,4 @@ public class GameRepository {
             playerRepository.deleteEventsForPlayerInGame(player.getId(), id);
         }
     }
-
-    public List getTeams(Long id) {
-
-        List<Team> teams = null;
-
-        Game game = em.find(Game.class, id);
-
-        if (game != null) {
-
-            teams = new ArrayList<Team>(2);
-
-            teams.add(game.getTeam1());
-            teams.add(game.getTeam2());
-        }
-        return teams;
-    }
-
 }

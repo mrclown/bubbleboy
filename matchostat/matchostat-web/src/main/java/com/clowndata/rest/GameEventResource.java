@@ -37,13 +37,7 @@ public class GameEventResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPlayerGameEvents(@PathParam("playerId") String playerId, @PathParam("gameId") String gameId) {
 
-        //todo: move code to service
         List<GameEvent> gameEvents = playerService.getPlayerGameEvents(Long.parseLong(playerId), Long.parseLong(gameId));
-
-        //todo: add test case
-//        if (gameEvents == null) {
-//            return Response.status(Response.Status.NOT_FOUND).build();
-//        }
 
         return Response.ok().entity(gameEvents).build();
     }
@@ -55,7 +49,6 @@ public class GameEventResource {
 
         Long eventId = gameService.addPlayerGameEvent(Long.parseLong(playerId), Long.parseLong(gameId), gameEvent);
 
-        //TODO: Error handling: no player, no game, illegal event
         URI uri = uriInfo.getAbsolutePathBuilder().path(eventId.toString()).build();
         return Response.created(uri).build();
     }

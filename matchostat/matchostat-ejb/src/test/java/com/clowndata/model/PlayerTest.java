@@ -1,12 +1,7 @@
 package com.clowndata.model;
 
-import com.clowndata.model.valueobject.GameEventAssist;
-import com.clowndata.model.valueobject.GameEventGoal;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Date;
 
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertFalse;
@@ -100,39 +95,14 @@ public class PlayerTest {
         assertEquals(1, bladerunners.getScore());
     }
 
-    //Todo: Delete this?
-    @Test
-    public void testPlayerGoalAndAssists() {
-
-        assertEquals(0, zora.getPoints(game));
-        assertEquals(0, pris.getPoints(game));
-        assertEquals(0, deckard.getPoints(game));
-
-        GameEventGoal goal = new GameEventGoal(game);
-        zora.addGameEvent(goal);
-        GameEvent assist = new GameEventAssist(game, goal);
-        pris.addGameEvent(assist);
-
-        assertEquals(1, zora.getPoints(game));
-        assertEquals(1, pris.getPoints(game));
-        assertEquals(0, deckard.getPoints(game));
-
-        assertEquals(1, replicants.getScore());
-        assertEquals(0, bladerunners.getScore());
-    }
-
-
     @Test
     public void testMostAssistFromOnePlayerToAnother() {
 
-        // assertNull(replicants.getMostAssistFromOnePlayerToAnother());
-        // assertNull(bladerunners.getMostAssistFromOnePlayerToAnother());
-
-        GameEventGoal goal = new GameEventGoal(game);
+        GameEvent goal = new GameEvent(game, GameEvent.GOAL);
         zora.addGameEvent(goal);
-        GameEvent assist = new GameEventAssist(game, goal);
+        GameEvent assist = new GameEvent(game, GameEvent.ASSIST, goal);
         pris.addGameEvent(assist);
-
+//todo
     }
 
     @Test
