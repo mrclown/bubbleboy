@@ -80,14 +80,18 @@ public class GameServiceImpl implements GameService {
 
         Player player = playerRepository.getPlayer(playerId);
 
-        List<Team> teams = gameRepository.getAllTeams();
+        if (player.isDeletable()) {
+            List<Team> teams = gameRepository.getAllTeams();
 
-        for (Team team : teams) {
-            if (team.getPlayers().contains(player)) {
-                team.getPlayers().remove(player);
+            for (Team team : teams) {
+                if (team.getPlayers().contains(player)) {
+                    team.getPlayers().remove(player);
+                }
             }
+            playerRepository.deletePlayer(playerId);
+        } else {
+            player.setActive(false);
         }
-        playerRepository.deletePlayer(playerId);
     }
 
     public GameSummary getGameSummary(Long gameId) {
