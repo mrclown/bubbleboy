@@ -32,5 +32,4 @@ public class GameEventTest {
         date.setTime(date.getTime() + 20000);
         new GameEvent(game, GameEvent.GOAL, date);
     }
-
 }

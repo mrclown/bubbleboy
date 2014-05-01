@@ -50,7 +50,12 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public void updateGame(Long id, Game game) {
-        gameRepository.updateGame(id, game);
+        Game persistedGame = gameRepository.getGame(id);
+        if (persistedGame == null) {
+            throw new ObjectNotFoundException(Game.class, id);
+        }
+
+        persistedGame.updateGame(game);
     }
 
     @Override
@@ -58,18 +63,19 @@ public class GameServiceImpl implements GameService {
         gameRepository.deleteGame(id);
     }
 
-    public Long addPlayerGameEvent(Long playerId, Long gameId, GameEvent gameEvent) {
+    public Long addPlayerGameEvent(Long playerId, Long gameId, GameEvent event) {
 
         Player player = playerRepository.getPlayer(playerId);
 
         Game game = gameRepository.getGame(gameId);
+        System.out.println("Stored Game: " + game.getGameStart().getTime());
+
+        GameEvent gameEvent = GameEvent.createGameEvent(game, event);
 
         if (gameEvent.getGameEventLink() != null) {
             GameEvent gameEventLink = playerRepository.getPlayerGameEvent(gameEvent.getGameEventLink().getId());
             gameEvent.setGameEventLink(gameEventLink);
         }
-
-        gameEvent.setGame(game);
 
         player.addGameEvent(gameEvent);
 

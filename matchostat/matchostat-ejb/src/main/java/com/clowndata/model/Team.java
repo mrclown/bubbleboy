@@ -57,10 +57,6 @@ public class Team {
         return score;
     }
 
-    public void setScore(int score) {
-        this.score = score;
-    }
-
     public Long getId() {
         return id;
     }

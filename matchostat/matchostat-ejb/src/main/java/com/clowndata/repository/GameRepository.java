@@ -89,40 +89,6 @@ public class GameRepository {
         return teams;
     }
 
-    private void updateTeam(Team persistedTeam, Team team) {
-        persistedTeam.setPlayers(team.getPlayers());
-        persistedTeam.setScore(team.getScore());
-    }
-
-    public Game updateGame(Long id, Game game) {
-
-        Game persistedGame = em.find(Game.class, id);
-
-        if (persistedGame == null) {
-            String msg = "";
-            log.error(msg);
-            throw new ObjectNotFoundException(Game.class, id);
-        }
-
-        Team persistedTeam = persistedGame.getTeam1();
-        if (persistedTeam != null) {
-            updateTeam(persistedTeam, game.getTeam1());
-
-        } else {
-            em.persist(game.getTeam1());
-        }
-
-        persistedTeam = persistedGame.getTeam2();
-        if (persistedTeam != null) {
-            updateTeam(persistedTeam, game.getTeam2());
-        } else {
-            em.persist(game.getTeam2());
-        }
-        log.info("Updated Game: " + game.getId());
-
-        return persistedGame;
-    }
-
     public void deleteGame(Long id) {
 
         Game game = em.find(Game.class, id);

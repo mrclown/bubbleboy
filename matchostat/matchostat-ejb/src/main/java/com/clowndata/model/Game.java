@@ -32,6 +32,7 @@ public class Game {
     @XmlAttribute
     Long id;
 
+    //todo: bean validation to prohibit team = 0
     @XmlAttribute
     @OneToOne
     private Team team1;
@@ -40,6 +41,7 @@ public class Game {
     @OneToOne
     private Team team2;
 
+    //todo: bean validation to prohibit gameStart = 0
     @XmlAttribute
     private Date gameStart;
 
@@ -59,15 +61,6 @@ public class Game {
         this.team2 = team2;
         this.gameStart = gameStart;
         this.gameEnd = null;
-    }
-
-    public void setTeam1(Team team1) {
-
-        this.team1 = team1;
-    }
-
-    public void setTeam2(Team team2) {
-        this.team2 = team2;
     }
 
     public Team getTeam1() {
@@ -107,6 +100,7 @@ public class Game {
     }
 
     public boolean isWithinGame(Date time) {
+
         return ((gameStart.getTime() <= time.getTime())) && ((gameEnd == null) || (gameEnd.getTime() >= time.getTime()));
     }
 
@@ -141,4 +135,47 @@ public class Game {
         }
         return team;
     }
+
+    public void updateGame(Game game) {
+
+        setGameStartAndEnd(game.gameStart, game.gameEnd);
+
+        Team persistedTeam = this.getTeam1();
+        if (persistedTeam != null) {
+            updateTeam(persistedTeam, game.getTeam1());
+        }
+
+        persistedTeam = this.getTeam2();
+        if (persistedTeam != null) {
+            updateTeam(persistedTeam, game.getTeam2());
+        }
+
+        log.info("Updated Game: " + this.id);
+    }
+
+    private void updateTeam(Team persistedTeam, Team team) {
+        persistedTeam.setPlayers(team.getPlayers());
+    }
+
+    private void setGameStartAndEnd(Date gameStart, Date gameEnd) {
+
+        if (gameStart == null) {
+            //todo: use bean validation
+            throw new IllegalStateException("Game start cannot be null");
+        }
+
+        if (gameEnd == null) {
+            this.gameStart = gameStart;
+            this.gameEnd = null;
+        } else {
+            if (gameEnd.getTime() < gameStart.getTime()) {
+                String msg = "Game end: " + gameEnd.toString() + " cannot be before Game start: " + gameStart.toString();
+                log.error(msg);
+                throw new IllegalStateException(msg);
+            }
+            this.gameStart = gameStart;
+            this.gameEnd = gameEnd;
+        }
+    }
 }
+

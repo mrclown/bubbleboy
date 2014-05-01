@@ -84,7 +84,6 @@ public class PlayerResource {
     @Path("{id}")
     public Response deletePlayer(@PathParam("id") String id) {
 
-        //todo: if not deletable, make inactive
         gameService.deletePlayer(Long.parseLong(id));
 
         return Response.noContent().build();

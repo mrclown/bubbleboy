@@ -2,6 +2,8 @@ package com.clowndata.model;
 
 import com.clowndata.util.DateSerializer;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -22,6 +24,9 @@ public class GameEvent {
     public static final int ASSIST = 1;
     public static final int OWNGOAL = 2;
 
+    @Transient
+    final Logger log = LoggerFactory.getLogger(GameEvent.class);
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @XmlAttribute
@@ -40,11 +45,8 @@ public class GameEvent {
     @XmlAttribute
     protected GameEvent gameEventLink;
 
-    public GameEvent() {
-    }
 
-    public GameEvent(Long id) {
-        this.id = id;
+    public GameEvent() {
     }
 
     public GameEvent(Game game, int eventType) {
@@ -62,8 +64,9 @@ public class GameEvent {
     private GameEvent(Game game, int eventType, Date eventTime, GameEvent gameEventLink) {
 
         if (!game.isWithinGame(eventTime)) {
-            //Todo: fix exception
-            throw new IllegalStateException();
+            String msg = "Not possible to create a GameEvent not within the Game time";
+            log.error(msg);
+            throw new IllegalStateException(msg);
         }
 
         this.game = game;
@@ -76,16 +79,8 @@ public class GameEvent {
         return this.game;
     }
 
-    public void setGame(Game game) {
-        this.game = game;
-    }
-
     public int getEventType() {
         return eventType;
-    }
-
-    public void setEventType(int eventType) {
-        this.eventType = eventType;
     }
 
     //    @JsonSerialize(using = DateSerializer.class)
@@ -108,5 +103,18 @@ public class GameEvent {
 
     public void setGameEventLink(GameEvent gameEventLink) {
         this.gameEventLink = gameEventLink;
+    }
+
+    public static GameEvent createGameEvent(Game game, GameEvent event) {
+
+        GameEvent gameEvent = null;
+
+        if (event.getEventTime() == null) {
+            gameEvent = new GameEvent(game, event.getEventType(), event.getGameEventLink());
+        } else {
+            gameEvent = new GameEvent(game, event.getEventType(), event.getEventTime(), event.getGameEventLink());
+        }
+
+        return gameEvent;
     }
 }
