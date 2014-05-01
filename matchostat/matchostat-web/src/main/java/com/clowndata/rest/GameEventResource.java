@@ -27,20 +27,8 @@ public class GameEventResource {
     @Inject
     private GameService gameService;
 
-    @Inject
-    private PlayerService playerService;
-
     @Context
     UriInfo uriInfo;
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getPlayerGameEvents(@PathParam("playerId") String playerId, @PathParam("gameId") String gameId) {
-
-        List<GameEvent> gameEvents = playerService.getPlayerGameEvents(Long.parseLong(playerId), Long.parseLong(gameId));
-
-        return Response.ok().entity(gameEvents).build();
-    }
 
     @POST
     @Produces("text/plain")

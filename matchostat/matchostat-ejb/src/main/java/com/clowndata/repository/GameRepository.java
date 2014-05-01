@@ -7,24 +7,15 @@ import com.clowndata.model.Team;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Transient;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created 2014.
  */
 public class GameRepository {
-
-
-    @Inject
-    private PlayerRepository playerRepository;
 
     @PersistenceContext
     private EntityManager em;
@@ -82,43 +73,21 @@ public class GameRepository {
         return games;
     }
 
-    public List<Team> getAllTeams() {
+    public void deleteGame(Game game) {
 
-        List<Team> teams = em.createNamedQuery("Team.findAll").getResultList();
-
-        return teams;
-    }
-
-    public void deleteGame(Long id) {
-
-        Game game = em.find(Game.class, id);
-
-        if (game == null) {
-            throw new ObjectNotFoundException(Game.class, id);
-        }
-        deleteTeams(game);
         em.remove(game);
 
         log.info("Deleted Game: " + game.getId());
     }
 
-    private void deleteTeams(Game game) {
-        Team team = game.getTeam1();
-        if (team != null) {
-            deleteEventsForPlayersInTeam(game.getId(), team);
-            em.remove(team);
-        }
-        team = game.getTeam2();
-        if (team != null) {
-            deleteEventsForPlayersInTeam(game.getId(), team);
-            em.remove(team);
-        }
-    }
+    public void deletePlayerFromTeams(Player player) {
 
-    private void deleteEventsForPlayersInTeam(Long id, Team team) {
+        List<Team> teams = em.createNamedQuery("Team.findAll").getResultList();
 
-        for (Player player : team.getPlayers()) {
-            playerRepository.deleteEventsForPlayerInGame(player.getId(), id);
+        for (Team team : teams) {
+            if (team.getPlayers().contains(player)) {
+                team.getPlayers().remove(player);
+            }
         }
     }
 }

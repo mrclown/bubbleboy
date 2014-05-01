@@ -4,11 +4,8 @@ package com.clowndata.rest;
  * Created 2014.
  */
 
-import com.clowndata.exception.ObjectNotFoundException;
 import com.clowndata.model.Player;
-import com.clowndata.repository.PlayerRepository;
 import com.clowndata.service.GameService;
-import com.clowndata.service.GameServiceImpl;
 import com.clowndata.service.PlayerService;
 
 import javax.enterprise.context.RequestScoped;
@@ -27,9 +24,6 @@ import java.util.List;
 @Path("/players")
 @RequestScoped
 public class PlayerResource {
-
-    @Inject
-    private GameService gameService;
 
     @Inject
     private PlayerService playerService;
@@ -84,7 +78,7 @@ public class PlayerResource {
     @Path("{id}")
     public Response deletePlayer(@PathParam("id") String id) {
 
-        gameService.deletePlayer(Long.parseLong(id));
+        playerService.deletePlayer(Long.parseLong(id));
 
         return Response.noContent().build();
     }

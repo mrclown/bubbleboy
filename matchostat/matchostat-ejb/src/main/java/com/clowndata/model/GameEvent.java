@@ -1,7 +1,5 @@
 package com.clowndata.model;
 
-import com.clowndata.util.DateSerializer;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,7 +105,7 @@ public class GameEvent {
 
     public static GameEvent createGameEvent(Game game, GameEvent event) {
 
-        GameEvent gameEvent = null;
+        GameEvent gameEvent;
 
         if (event.getEventTime() == null) {
             gameEvent = new GameEvent(game, event.getEventType(), event.getGameEventLink());

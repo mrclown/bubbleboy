@@ -1,16 +1,13 @@
 package com.clowndata.repository;
 
 import com.clowndata.exception.ObjectNotFoundException;
-import com.clowndata.model.Game;
 import com.clowndata.model.GameEvent;
 import com.clowndata.model.Player;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,21 +48,6 @@ public class PlayerRepository {
         return players;
     }
 
-    public void updatePlayer(Long id, Player player) {
-
-        Player persistedPlayer = em.find(Player.class, id);
-
-        if (persistedPlayer != null) {
-            log.info("Updating player: " + persistedPlayer.getName() + " id: " + id);
-            persistedPlayer.setName(player.getName());
-            persistedPlayer.setActive(player.getActive());
-            log.info("Updated player: " + player.getName() + " id: " + id + " active: " + player.getActive());
-        } else {
-            log.error("Player could not be found id: " + id);
-            throw new ObjectNotFoundException(Player.class, id);
-        }
-    }
-
     public void deletePlayer(Long id) {
 
         Player player = em.find(Player.class, id);
@@ -81,37 +63,7 @@ public class PlayerRepository {
         }
 
         log.info("Deleting player: " + player.getName() + " id: " + id);
-        deletePlayerEvents(player);
         em.remove(player);
-    }
-
-    private void deletePlayerEvents(Player player) {
-
-        log.info("Deleting events for player id: " + player.getId());
-
-        for (GameEvent gameEvent : player.getGameEvents()) {
-            em.remove(gameEvent);
-        }
-    }
-
-    public List<GameEvent> getPlayerGameEvents(Long id, Long gameId) {
-
-        List<GameEvent> gameEvents = null;
-        Player player = em.find(Player.class, id);
-
-        if (player == null) {
-            log.error("Player could not be found id: " + id);
-            throw new ObjectNotFoundException(Player.class, id);
-        }
-
-        gameEvents = new ArrayList();
-        for (GameEvent gameEvent : player.getGameEvents()) {
-            if (gameEvent.getGame().getId() == gameId) {
-                gameEvents.add(gameEvent);
-            }
-        }
-
-        return gameEvents;
     }
 
     public GameEvent getPlayerGameEvent(Long gameEventId) {
@@ -133,33 +85,9 @@ public class PlayerRepository {
         return gameEvent.getId();
     }
 
-    public void deleteEventsForPlayerInGame(Long id, Long gameId) {
-
-        Player player = em.find(Player.class, id);
-
-        if (player == null) {
-            log.error("Player could not be found id: " + id);
-            throw new ObjectNotFoundException(Player.class, id);
-        }
-
-        List<GameEvent> gameEvents = player.getGameEvents();
-        List<GameEvent> gameEventsToDelete = new ArrayList<>();
-
-        for (GameEvent gameEvent : gameEvents) {
-            if (gameEvent.getGame().getId() == gameId) {
-                gameEventsToDelete.add(gameEvent);
-            }
-        }
-
-        deleteGameEvents(player, gameEventsToDelete);
-    }
-
-    private void deleteGameEvents(Player player, List<GameEvent> gameEventsToDelete) {
-
-        log.info("Deleting events for player id: " + player.getId());
+    public void deleteGameEvents(List<GameEvent> gameEventsToDelete) {
 
         for (GameEvent gameEvent : gameEventsToDelete) {
-            player.getGameEvents().remove(gameEvent);
             em.remove(gameEvent);
         }
     }

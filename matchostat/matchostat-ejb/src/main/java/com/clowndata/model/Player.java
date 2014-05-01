@@ -41,7 +41,7 @@ public class Player {
     private Boolean active;
 
     @JsonIgnore
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<GameEvent> gameEvents;
 
     public Player() {
@@ -149,6 +149,31 @@ public class Player {
         return points;
     }
 
+    public List<GameEvent> deleteEventsForPlayerInGame(Long gameId) {
+
+        List<GameEvent> gameEventsToDelete = new ArrayList<>();
+
+        for (GameEvent gameEvent : gameEvents) {
+            if (gameEvent.getGame().getId() == gameId) {
+                gameEventsToDelete.add(gameEvent);
+            }
+        }
+
+        deleteGameEvents(gameEventsToDelete);
+
+        return gameEventsToDelete;
+    }
+
+    private void deleteGameEvents(List<GameEvent> gameEventsToDelete) {
+
+        log.info("Deleting events for player id: " + id);
+
+        for (GameEvent gameEvent : gameEventsToDelete) {
+            gameEvents.remove(gameEvent);
+        }
+    }
+
+
     @JsonIgnore
     public boolean isDeletable() {
         return ((this.gameEvents == null) || (this.gameEvents.size() == 0));
@@ -156,5 +181,12 @@ public class Player {
 
     public boolean hasEvent(GameEvent gameEvent) {
         return gameEvents.contains(gameEvent);
+    }
+
+    public void updatePlayer(Player player) {
+        log.info("Updating player: " + this.getName() + " id: " + id);
+        this.setName(player.getName());
+        this.setActive(player.getActive());
+        log.info("Updated player: " + player.getName() + " id: " + id + " active: " + player.getActive());
     }
 }

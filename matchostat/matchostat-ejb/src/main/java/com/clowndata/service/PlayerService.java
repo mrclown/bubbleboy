@@ -1,6 +1,5 @@
 package com.clowndata.service;
 
-import com.clowndata.model.GameEvent;
 import com.clowndata.model.Player;
 
 import java.util.List;
@@ -19,6 +18,5 @@ public interface PlayerService {
 
     void updatePlayer(Long id, Player player);
 
-    List<GameEvent> getPlayerGameEvents(Long playerId, Long gameId);
-
+    public void deletePlayer(Long playerId);
 }

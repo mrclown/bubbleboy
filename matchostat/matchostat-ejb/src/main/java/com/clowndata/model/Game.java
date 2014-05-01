@@ -12,11 +12,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlRootElement
@@ -34,11 +37,13 @@ public class Game {
 
     //todo: bean validation to prohibit team = 0
     @XmlAttribute
-    @OneToOne
+    @NotNull
+    @OneToOne(orphanRemoval = true)
     private Team team1;
 
     @XmlAttribute
-    @OneToOne
+    @NotNull
+    @OneToOne(orphanRemoval = true)
     private Team team2;
 
     //todo: bean validation to prohibit gameStart = 0
@@ -176,6 +181,21 @@ public class Game {
             this.gameStart = gameStart;
             this.gameEnd = gameEnd;
         }
+    }
+
+    public List<GameEvent> deleteEventsForPlayers() {
+
+        List<GameEvent> gameEventsToDelete = new ArrayList<GameEvent>();
+
+        for (Player player : team1.getPlayers()) {
+            gameEventsToDelete.addAll(player.deleteEventsForPlayerInGame(id));
+        }
+
+        for (Player player : team2.getPlayers()) {
+            gameEventsToDelete.addAll(player.deleteEventsForPlayerInGame(id));
+        }
+
+        return gameEventsToDelete;
     }
 }
 

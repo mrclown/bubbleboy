@@ -52,16 +52,21 @@ public class GameServiceImpl implements GameService {
     @Override
     public void updateGame(Long id, Game game) {
         Game persistedGame = gameRepository.getGame(id);
-        if (persistedGame == null) {
-            throw new ObjectNotFoundException(Game.class, id);
-        }
 
         persistedGame.updateGame(game);
     }
 
     @Override
     public void deleteGame(Long id) {
-        gameRepository.deleteGame(id);
+
+        Game game = gameRepository.getGame(id);
+
+        List<GameEvent> gameEventsToDelete = game.deleteEventsForPlayers();
+
+        // If we don't do this the events get orphan but I don't understand why
+        playerRepository.deleteGameEvents(gameEventsToDelete);
+
+        gameRepository.deleteGame(game);
     }
 
     public Long addPlayerGameEvent(Long playerId, Long gameId, GameEvent event) {
@@ -69,7 +74,6 @@ public class GameServiceImpl implements GameService {
         Player player = playerRepository.getPlayer(playerId);
 
         Game game = gameRepository.getGame(gameId);
-        System.out.println("Stored Game: " + game.getGameStart().getTime());
 
         GameEvent gameEvent = GameEvent.createGameEvent(game, event);
 
@@ -81,24 +85,6 @@ public class GameServiceImpl implements GameService {
         player.addGameEvent(gameEvent);
 
         return playerRepository.createGameEvent(gameEvent);
-    }
-
-    public void deletePlayer(Long playerId) {
-
-        Player player = playerRepository.getPlayer(playerId);
-
-        if (player.isDeletable()) {
-            List<Team> teams = gameRepository.getAllTeams();
-
-            for (Team team : teams) {
-                if (team.getPlayers().contains(player)) {
-                    team.getPlayers().remove(player);
-                }
-            }
-            playerRepository.deletePlayer(playerId);
-        } else {
-            player.setActive(false);
-        }
     }
 
     public GameSummary getGameSummary(Long gameId) {

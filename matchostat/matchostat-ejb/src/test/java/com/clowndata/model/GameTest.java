@@ -83,4 +83,20 @@ public class GameTest {
         assertEquals(1, game.getTeam1().getScore());
         assertEquals(0, game.getTeam2().getScore());
     }
+
+    @Test
+    public void testDeleteEventsForPlayers(){
+
+        Set<Player> players = new HashSet<>();
+        Player kalle = new Player("Kalle");
+        players.add(kalle);
+        Team team = new Team(players);
+        Game game = new Game(team, new Team());
+        GameEvent goal = new GameEvent(game, GameEvent.GOAL);
+        kalle.addGameEvent(goal);
+
+        assertEquals(1, kalle.getGameEvents().size());
+        game.deleteEventsForPlayers();
+        assertEquals(0, kalle.getGameEvents().size());
+    }
 }

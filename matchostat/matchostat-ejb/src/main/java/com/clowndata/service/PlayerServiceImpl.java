@@ -1,7 +1,8 @@
 package com.clowndata.service;
 
-import com.clowndata.model.GameEvent;
 import com.clowndata.model.Player;
+import com.clowndata.model.Team;
+import com.clowndata.repository.GameRepository;
 import com.clowndata.repository.PlayerRepository;
 
 import javax.ejb.Stateless;
@@ -16,6 +17,9 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Inject
     PlayerRepository playerRepository;
+
+    @Inject
+    private GameRepository gameRepository;
 
     @Override
     public List getAllPlayers() {
@@ -35,12 +39,24 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public void updatePlayer(Long id, Player player) {
-        playerRepository.updatePlayer(id, player);
+
+        Player persistedPlayer = playerRepository.getPlayer(id);
+        persistedPlayer.updatePlayer(player);
     }
 
-    @Override
-    public List<GameEvent> getPlayerGameEvents(Long playerId, Long gameId) {
-        return playerRepository.getPlayerGameEvents(playerId, gameId);
+    public void deletePlayer(Long playerId) {
+
+        Player player = playerRepository.getPlayer(playerId);
+
+        if (player.isDeletable()) {
+
+            gameRepository.deletePlayerFromTeams(player);
+            playerRepository.deletePlayer(playerId);
+
+        } else {
+            player.setActive(false);
+        }
     }
+
 
 }

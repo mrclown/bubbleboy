@@ -18,7 +18,6 @@ public class DateSerializer extends JsonSerializer<Date> {
     @Override
     public void serialize(Date date, org.codehaus.jackson.JsonGenerator jgen, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
 //Todo: rewrite using java 8
-        SimpleDateFormat s = new SimpleDateFormat(DATE_TIME_FORMAT);
         jgen.writeString(new SimpleDateFormat(DATE_TIME_FORMAT).format(date));
     }
 

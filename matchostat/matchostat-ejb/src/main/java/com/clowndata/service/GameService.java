@@ -1,10 +1,7 @@
 package com.clowndata.service;
 
-import com.clowndata.exception.ObjectNotFoundException;
 import com.clowndata.model.Game;
 import com.clowndata.model.GameEvent;
-import com.clowndata.model.Player;
-import com.clowndata.model.Team;
 import com.clowndata.model.valueobject.GameSummary;
 
 import java.util.List;
@@ -25,8 +22,6 @@ public interface GameService {
     public void deleteGame(Long id);
 
     public Long addPlayerGameEvent(Long playerId, Long gameId, GameEvent gameEvent);
-
-    public void deletePlayer(Long playerId);
 
     public GameSummary getGameSummary(Long gameId);
 
