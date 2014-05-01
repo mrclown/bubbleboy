@@ -157,7 +157,7 @@ public class Game {
         persistedTeam.setPlayers(team.getPlayers());
     }
 
-    private void setGameStartAndEnd(Date gameStart, Date gameEnd) {
+    public void setGameStartAndEnd(Date gameStart, Date gameEnd) {
 
         if (gameStart == null) {
             //todo: use bean validation

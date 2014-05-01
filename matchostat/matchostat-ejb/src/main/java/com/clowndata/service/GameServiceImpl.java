@@ -15,6 +15,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.Transient;
 import javax.xml.ws.http.HTTPException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -112,5 +113,13 @@ public class GameServiceImpl implements GameService {
         GameSummary gameSummary = new GameSummary(game);
 
         return gameSummary;
+    }
+
+    @Override
+    public void endGame(Long gameId) {
+
+        Game game = gameRepository.getGame(gameId);
+
+        game.setGameStartAndEnd(game.getGameStart(), new Date());
     }
 }

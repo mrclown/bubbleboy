@@ -29,4 +29,6 @@ public interface GameService {
     public void deletePlayer(Long playerId);
 
     public GameSummary getGameSummary(Long gameId);
+
+    void endGame(Long gameId);
 }

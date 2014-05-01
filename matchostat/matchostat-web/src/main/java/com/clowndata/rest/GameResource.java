@@ -74,6 +74,17 @@ public class GameResource {
         return Response.noContent().build();
     }
 
+    @PUT
+    @Path("{id}/end")
+    @Produces("text/plain")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response endGame(@PathParam("id") String id) {
+
+       gameService.endGame(Long.parseLong(id));
+
+        return Response.noContent().build();
+    }
+
     @DELETE
     @Path("{id}")
     @Produces("text/plain")
