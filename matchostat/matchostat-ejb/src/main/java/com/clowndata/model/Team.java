@@ -25,9 +25,9 @@ public class Team {
     Long id;
 
     @XmlAttribute
+    @NotNull
     @ManyToMany
-//    @ElementCollection(fetch = FetchType.EAGER)
-    Set<Player> players = new HashSet<Player>();
+    Set<Player> players = new HashSet<>();
 
     @XmlAttribute
     int score;
@@ -37,7 +37,8 @@ public class Team {
     }
 
     public Team(Set<Player> players) {
-        this.players = players;
+        this.players.clear();
+        this.players.addAll(players);
         this.score = 0;
     }
 
@@ -46,7 +47,8 @@ public class Team {
     }
 
     public void setPlayers(Set<Player> players) {
-        this.players = players;
+        this.players.clear();
+        this.players.addAll(players);
     }
 
     public void addPlayer(Player player) {
@@ -77,5 +79,11 @@ public class Team {
         }
 
         return result;
+    }
+
+    public void removePlayer(Player player) {
+        if (this.players.contains(player)) {
+            this.players.remove(player);
+        }
     }
 }

@@ -136,8 +136,8 @@ public class Game {
     }
 
     public void updateGame(Game game) {
-
-        setGameStartAndEnd(game.gameStart, game.gameEnd);
+        // gameStart is ignored in updates
+        updateGameEnd(game.gameEnd);
 
         Team persistedTeam = this.getTeam1();
         persistedTeam.setPlayers(game.getTeam1().getPlayers());
@@ -148,24 +148,15 @@ public class Game {
         log.info("Updated Game: " + this.id);
     }
 
-    public void setGameStartAndEnd(Date gameStart, Date gameEnd) {
-
-        if (gameStart == null) {
-            String msg = "Game start cannot be null";
-            log.error(msg);
-            throw new IllegalStateException(msg);
-        }
-
+    public void updateGameEnd(Date gameEnd) {
         if (gameEnd == null) {
-            this.gameStart = gameStart;
             this.gameEnd = null;
         } else {
-            if (gameEnd.getTime() < gameStart.getTime()) {
-                String msg = "Game end: " + gameEnd.toString() + " cannot be before Game start: " + gameStart.toString();
+            if (gameEnd.getTime() < this.gameStart.getTime()) {
+                String msg = "Game end: " + gameEnd.toString() + " cannot be before Game start: " + this.gameStart.toString();
                 log.error(msg);
                 throw new IllegalStateException(msg);
             }
-            this.gameStart = gameStart;
             this.gameEnd = gameEnd;
         }
     }

@@ -50,7 +50,12 @@ public class PlayerServiceImpl implements PlayerService {
 
         if (player.isDeletable()) {
 
-            gameRepository.deletePlayerFromTeams(player);
+            List<Team> teams = gameRepository.getAllTeams();
+
+            for (Team team : teams) {
+                team.removePlayer(player);
+            }
+
             playerRepository.deletePlayer(playerId);
 
         } else {

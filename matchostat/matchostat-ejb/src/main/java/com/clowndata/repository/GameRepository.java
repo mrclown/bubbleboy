@@ -74,14 +74,8 @@ public class GameRepository {
         log.info("Deleted Game: " + game.getId());
     }
 
-    public void deletePlayerFromTeams(Player player) {
-
-        List<Team> teams = em.createNamedQuery("Team.findAll").getResultList();
-
-        for (Team team : teams) {
-            if (team.getPlayers().contains(player)) {
-                team.getPlayers().remove(player);
-            }
-        }
+    public List<Team> getAllTeams() {
+        return em.createNamedQuery("Team.findAll").getResultList();
     }
+
 }

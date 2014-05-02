@@ -106,6 +106,6 @@ public class GameServiceImpl implements GameService {
 
         Game game = gameRepository.getGame(gameId);
 
-        game.setGameStartAndEnd(game.getGameStart(), new Date());
+        game.setGameEnd(new Date());
     }
 }
