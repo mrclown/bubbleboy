@@ -33,11 +33,11 @@ public class Player {
     private Long id;
 
     @XmlAttribute
-    @NotNull
-    @Size(min = 1, max = 20)
+    @Size(min = 2, max = 20)
     private String name;
 
     @XmlAttribute
+    @NotNull
     private Boolean active;
 
     @JsonIgnore

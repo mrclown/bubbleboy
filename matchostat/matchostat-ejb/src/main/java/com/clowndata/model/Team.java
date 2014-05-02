@@ -1,6 +1,7 @@
 package com.clowndata.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -25,8 +26,8 @@ public class Team {
 
     @XmlAttribute
     @ManyToMany
-//    @ElementCollection(fetch=FetchType.EAGER)
-            Set<Player> players = new HashSet<Player>();
+//    @ElementCollection(fetch = FetchType.EAGER)
+    Set<Player> players = new HashSet<Player>();
 
     @XmlAttribute
     int score;

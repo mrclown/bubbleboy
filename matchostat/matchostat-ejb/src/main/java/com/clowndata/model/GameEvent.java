@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -30,12 +31,14 @@ public class GameEvent {
     @XmlAttribute
     private Long id;
 
+    @NotNull
     @ManyToOne
     private Game game;
 
     @XmlAttribute
     private int eventType;
 
+    @NotNull
     @XmlAttribute
     private Date eventTime;
 

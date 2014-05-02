@@ -25,12 +25,6 @@ public class GameRepository {
 
     public Long createGame(Game game) {
 
-        Team team = game.getTeam1();
-        em.persist(team);
-
-        team = game.getTeam2();
-        em.persist(team);
-
         em.persist(game);
 
         log.info("Created Game: " + game.getId());

@@ -35,19 +35,18 @@ public class Game {
     @XmlAttribute
     Long id;
 
-    //todo: bean validation to prohibit team = 0
     @XmlAttribute
     @NotNull
-    @OneToOne(orphanRemoval = true)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private Team team1;
 
     @XmlAttribute
     @NotNull
-    @OneToOne(orphanRemoval = true)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     private Team team2;
 
-    //todo: bean validation to prohibit gameStart = 0
     @XmlAttribute
+    @NotNull
     private Date gameStart;
 
     @XmlAttribute
@@ -93,11 +92,6 @@ public class Game {
     @JsonSerialize(using = DateSerializer.class)
     public Date getGameEnd() {
         return gameEnd;
-    }
-
-    @JsonDeserialize(using = DateDeserializer.class)
-    public void setGameStart(Date gameStart) {
-        this.gameStart = gameStart;
     }
 
     public boolean isGameEnded() {
@@ -146,27 +140,20 @@ public class Game {
         setGameStartAndEnd(game.gameStart, game.gameEnd);
 
         Team persistedTeam = this.getTeam1();
-        if (persistedTeam != null) {
-            updateTeam(persistedTeam, game.getTeam1());
-        }
+        persistedTeam.setPlayers(game.getTeam1().getPlayers());
 
         persistedTeam = this.getTeam2();
-        if (persistedTeam != null) {
-            updateTeam(persistedTeam, game.getTeam2());
-        }
+        persistedTeam.setPlayers(game.getTeam2().getPlayers());
 
         log.info("Updated Game: " + this.id);
-    }
-
-    private void updateTeam(Team persistedTeam, Team team) {
-        persistedTeam.setPlayers(team.getPlayers());
     }
 
     public void setGameStartAndEnd(Date gameStart, Date gameEnd) {
 
         if (gameStart == null) {
-            //todo: use bean validation
-            throw new IllegalStateException("Game start cannot be null");
+            String msg = "Game start cannot be null";
+            log.error(msg);
+            throw new IllegalStateException(msg);
         }
 
         if (gameEnd == null) {
@@ -185,7 +172,7 @@ public class Game {
 
     public List<GameEvent> deleteEventsForPlayers() {
 
-        List<GameEvent> gameEventsToDelete = new ArrayList<GameEvent>();
+        List<GameEvent> gameEventsToDelete = new ArrayList<>();
 
         for (Player player : team1.getPlayers()) {
             gameEventsToDelete.addAll(player.deleteEventsForPlayerInGame(id));
