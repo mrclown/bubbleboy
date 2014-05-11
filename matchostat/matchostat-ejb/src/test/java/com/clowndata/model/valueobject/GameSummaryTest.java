@@ -45,6 +45,7 @@ public class GameSummaryTest {
 
         //Team1 events
         ralf.addGameEvent(new GameEvent(game, GameEvent.GOAL));
+        florian.addGameEvent(new GameEvent(game, GameEvent.OWNGOAL));
 
         //Team2 events
         karl.addGameEvent(new GameEvent(game, GameEvent.GOAL));
@@ -74,7 +75,7 @@ public class GameSummaryTest {
         TeamSummary team2Summary = gameSummary.getTeam2Summary();
 
         assertEquals(1, team1Summary.getTeamGoals());
-        assertEquals(4, team2Summary.getTeamGoals());
+        assertEquals(5, team2Summary.getTeamGoals());
 
         assertEquals(100, gameSummary.getDurationInSeconds());
 

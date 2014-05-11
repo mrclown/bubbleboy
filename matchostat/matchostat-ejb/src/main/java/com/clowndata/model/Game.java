@@ -6,6 +6,7 @@ package com.clowndata.model;
 
 import com.clowndata.util.DateDeserializer;
 import com.clowndata.util.DateSerializer;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.slf4j.Logger;
@@ -38,12 +39,12 @@ public class Game {
     @XmlAttribute
     @NotNull
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
-    private Team team1;
+    private Team team1 = new Team();
 
     @XmlAttribute
     @NotNull
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
-    private Team team2;
+    private Team team2 = new Team();
 
     @XmlAttribute
     @NotNull
@@ -51,6 +52,10 @@ public class Game {
 
     @XmlAttribute
     private Date gameEnd;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<GameEvent> gameEvents = new ArrayList<>();
 
     public Game() {
         this(new Team(), new Team(), new Date());
@@ -94,8 +99,14 @@ public class Game {
         return gameEnd;
     }
 
+    @JsonIgnore
     public boolean isGameEnded() {
         return this.gameEnd != null;
+    }
+
+    @JsonIgnore
+    public List<GameEvent> getGameEvents() {
+        return this.gameEvents;
     }
 
     public boolean isWithinGame(Date time) {
@@ -161,19 +172,33 @@ public class Game {
         }
     }
 
-    public List<GameEvent> deleteEventsForPlayers() {
+    public void addGameEvent(GameEvent gameEvent) {
+        this.gameEvents.add(gameEvent);
+    }
 
-        List<GameEvent> gameEventsToDelete = new ArrayList<>();
+    public void deleteGameEvents() {
 
         for (Player player : team1.getPlayers()) {
-            gameEventsToDelete.addAll(player.deleteEventsForPlayerInGame(id));
+            player.deleteEventsForPlayerInGame(id);
         }
 
         for (Player player : team2.getPlayers()) {
-            gameEventsToDelete.addAll(player.deleteEventsForPlayerInGame(id));
+            player.deleteEventsForPlayerInGame(id);
+        }
+        this.gameEvents.clear();
+    }
+
+    @JsonIgnore
+    public int getNumberOfOwnGoals() {
+        int nrOfOwnGoals = 0;
+
+        for (GameEvent gameEvent : this.gameEvents) {
+            if (gameEvent.getEventType() == GameEvent.OWNGOAL) {
+                nrOfOwnGoals++;
+            }
         }
 
-        return gameEventsToDelete;
+        return nrOfOwnGoals;
     }
 }
 

@@ -1,6 +1,7 @@
 package com.clowndata.model.valueobject;
 
 import com.clowndata.model.Game;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 import javax.xml.bind.annotation.*;
 import java.util.Date;
@@ -31,7 +32,7 @@ public class GameSummary {
 
         gameEnded = game.isGameEnded();
 
-        long endTime = 0;
+        long endTime;
         if (!gameEnded) {
             Date now = new Date();
             endTime = now.getTime();
@@ -56,5 +57,10 @@ public class GameSummary {
 
     public TeamSummary getTeam2Summary() {
         return this.team2Summary;
+    }
+
+    @JsonIgnore
+    public int getTotalNumberOfGoals(){
+        return this.team1Summary.getTeamGoals() + this.team2Summary.getTeamGoals();
     }
 }

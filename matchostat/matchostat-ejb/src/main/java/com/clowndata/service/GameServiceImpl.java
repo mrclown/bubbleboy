@@ -1,10 +1,8 @@
 package com.clowndata.service;
 
-import com.clowndata.exception.ObjectNotFoundException;
 import com.clowndata.model.Game;
 import com.clowndata.model.GameEvent;
 import com.clowndata.model.Player;
-import com.clowndata.model.Team;
 import com.clowndata.model.valueobject.GameSummary;
 import com.clowndata.repository.GameRepository;
 import com.clowndata.repository.PlayerRepository;
@@ -14,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.Transient;
-import javax.xml.ws.http.HTTPException;
 import java.util.Date;
 import java.util.List;
 
@@ -61,10 +58,7 @@ public class GameServiceImpl implements GameService {
 
         Game game = gameRepository.getGame(id);
 
-        List<GameEvent> gameEventsToDelete = game.deleteEventsForPlayers();
-
-        // If we don't do this the events get orphan but I don't understand why
-        playerRepository.deleteGameEvents(gameEventsToDelete);
+        game.deleteGameEvents();
 
         gameRepository.deleteGame(game);
     }

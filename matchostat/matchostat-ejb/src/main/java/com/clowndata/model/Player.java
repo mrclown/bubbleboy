@@ -42,7 +42,7 @@ public class Player {
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<GameEvent> gameEvents;
+    private List<GameEvent> gameEvents = new ArrayList<>();
 
     public Player() {
         this(null);
@@ -51,7 +51,6 @@ public class Player {
     public Player(String name) {
         this.name = name;
         this.active = true;
-        this.gameEvents = new ArrayList<>();
     }
 
     public Long getId() {
@@ -80,6 +79,10 @@ public class Player {
 
     public void addGameEvent(GameEvent gameEvent) {
 
+        Game game = gameEvent.getGame();
+
+        game.addGameEvent(gameEvent);
+
         Team team = gameEvent.getGame().getTeamWithPlayer(this);
 
         if (team == null) {
@@ -100,8 +103,8 @@ public class Player {
                     log.error(msg);
                     throw new IllegalStateException(msg);
                 } else {
-                    Game game = linkedEvent.getGame();
-                    if (!game.isEventByPlayerWithinTheSameTeam(team, linkedEvent)) {
+                    Game linkedGame = linkedEvent.getGame();
+                    if (!linkedGame.isEventByPlayerWithinTheSameTeam(team, linkedEvent)) {
                         String msg = "The assist by player: " + this.getName() + " id: " + this.getId() + " is not to a player in the same team";
                         log.error(msg);
                         throw new IllegalStateException(msg);
@@ -109,7 +112,7 @@ public class Player {
                 }
                 break;
             case GameEvent.OWNGOAL:
-                gameEvent.getGame().increaseScoreForOppositeTeam(team);
+                game.increaseScoreForOppositeTeam(team);
                 // an own goal cannot be linked
                 gameEvent.setGameEventLink(null);
                 break;
@@ -117,6 +120,7 @@ public class Player {
 
         }
         this.gameEvents.add(gameEvent);
+
     }
 
     public int getGoals(Game game) {

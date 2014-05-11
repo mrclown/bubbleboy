@@ -12,7 +12,7 @@ public class GameEventTest {
     @Test(expected = IllegalStateException.class)
     public void testNotPossibleWithEventsBeforeGame() {
 
-        Game game = new Game();
+        Game game = new Game(new Team(), new Team());
 
         Date date = new Date();
         date.setTime(111);
@@ -22,7 +22,7 @@ public class GameEventTest {
     @Test(expected = IllegalStateException.class)
     public void testNotPossibleWithEventsAfterGame() {
 
-        Game game = new Game();
+        Game game = new Game(new Team(), new Team());
 
         Date gameEnd = new Date();
         gameEnd.setTime(gameEnd.getTime() + 10000);

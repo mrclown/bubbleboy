@@ -1,6 +1,5 @@
 package com.clowndata.model;
 
-import junit.framework.Assert;
 import org.junit.Test;
 
 import java.util.Date;
@@ -19,7 +18,7 @@ public class GameTest {
     @Test
     public void testGameEnded() {
 
-        Game game = new Game();
+        Game game = new Game(new Team(), new Team());
 
         assertFalse(game.isGameEnded());
 
@@ -31,7 +30,7 @@ public class GameTest {
     @Test
     public void testTimeWithinGame() {
 
-        Game game = new Game();
+        Game game = new Game(new Team(), new Team());
 
         Date beforeGame = new Date();
         beforeGame.setTime(beforeGame.getTime() - 100000);
@@ -86,8 +85,7 @@ public class GameTest {
     }
 
     @Test
-    public void testDeleteEventsForPlayers(){
-
+    public void testDeleteEventsForPlayers() {
         Set<Player> players = new HashSet<>();
         Player kalle = new Player("Kalle");
         players.add(kalle);
@@ -97,7 +95,9 @@ public class GameTest {
         kalle.addGameEvent(goal);
 
         assertEquals(1, kalle.getGameEvents().size());
-        game.deleteEventsForPlayers();
+        assertEquals(1, game.getGameEvents().size());
+        game.deleteGameEvents();
         assertEquals(0, kalle.getGameEvents().size());
+        assertEquals(0, game.getGameEvents().size());
     }
 }
