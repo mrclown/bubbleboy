@@ -23,6 +23,13 @@ public class GameRepository {
     @Transient
     final Logger log = LoggerFactory.getLogger(GameRepository.class);
 
+    public GameRepository(EntityManager em) {
+        this.em = em;
+    }
+
+    public GameRepository() {
+    }
+
     public Long createGame(Game game) {
 
         em.persist(game);

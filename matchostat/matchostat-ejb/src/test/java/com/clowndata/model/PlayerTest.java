@@ -3,6 +3,9 @@ package com.clowndata.model;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Date;
+
+import static java.lang.Thread.sleep;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNull;
@@ -19,6 +22,7 @@ public class PlayerTest {
     private Team bladerunners;
     private Player zora;
     private Player pris;
+    private Player rachael;
     private Player deckard;
 
     @Before
@@ -29,8 +33,10 @@ public class PlayerTest {
 
         zora = new Player("Zora");
         pris = new Player("Pris");
+        rachael = new Player("Rachael");
         replicants.addPlayer(zora);
         replicants.addPlayer(pris);
+        replicants.addPlayer(rachael);
 
         deckard = new Player("Deckard");
         bladerunners.addPlayer(deckard);
@@ -103,6 +109,32 @@ public class PlayerTest {
         GameEvent assist = new GameEvent(game, GameEvent.ASSIST, goal);
         pris.addGameEvent(assist);
 //todo
+    }
+
+    @Test
+    public void testMultipleAssistsForOneGoal() {
+
+        GameEvent goal = new GameEvent(game, GameEvent.GOAL);
+        zora.addGameEvent(goal);
+        GameEvent assist1 = new GameEvent(game, GameEvent.ASSIST, goal);
+        pris.addGameEvent(assist1);
+        GameEvent assist2 = new GameEvent(game, GameEvent.ASSIST, goal);
+        rachael.addGameEvent(assist2);
+
+        assertEquals(1, zora.getPoints(game));
+        assertEquals(1, pris.getPoints(game));
+        assertEquals(1, rachael.getPoints(game));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testMultipleAssistsForOneGoalSamePlayer() {
+
+        GameEvent goal = new GameEvent(game, GameEvent.GOAL);
+        zora.addGameEvent(goal);
+        GameEvent assist1 = new GameEvent(game, GameEvent.ASSIST, goal);
+        pris.addGameEvent(assist1);
+        GameEvent assist2 = new GameEvent(game, GameEvent.ASSIST, goal);
+        pris.addGameEvent(assist2);
     }
 
     @Test

@@ -108,6 +108,10 @@ public class Player {
                         String msg = "The assist by player: " + this.getName() + " id: " + this.getId() + " is not to a player in the same team";
                         log.error(msg);
                         throw new IllegalStateException(msg);
+                    } else if (assistToGoalAlreadyExist(gameEvent)) {
+                        String msg = "The player: " + this.getName() + " id: " + this.getId() + " already has an assist for the goal";
+                        log.error(msg);
+                        throw new IllegalStateException(msg);
                     }
                 }
                 break;
@@ -121,6 +125,22 @@ public class Player {
         }
         this.gameEvents.add(gameEvent);
 
+    }
+
+    private boolean assistToGoalAlreadyExist(GameEvent assist) {
+
+        boolean alreadyExist = false;
+
+        Long goalId = assist.getGameEventLink().getId();
+
+        for (GameEvent gameEvent : this.getGameEvents()) {
+            if ((gameEvent.getEventType() == GameEvent.ASSIST) && (gameEvent.getGameEventLink().getId() == goalId)) {
+                alreadyExist = true;
+                break;
+            }
+        }
+
+        return alreadyExist;
     }
 
     public int getGoals(Game game) {

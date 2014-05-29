@@ -57,7 +57,7 @@ public class Game {
     @OneToMany(cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<GameEvent> gameEvents = new ArrayList<>();
 
-    public Game() {
+    protected Game() {
         this(new Team(), new Team(), new Date());
     }
 

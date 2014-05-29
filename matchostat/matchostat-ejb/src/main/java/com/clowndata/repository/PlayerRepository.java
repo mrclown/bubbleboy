@@ -8,7 +8,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created 2014.
@@ -21,13 +26,37 @@ public class PlayerRepository {
     @PersistenceContext
     private EntityManager em;
 
+    public PlayerRepository(EntityManager em) {
+        this.em = em;
+    }
+
+    public PlayerRepository() {
+    }
+
     public Long createPlayer(Player player) {
+
+        validatePlayer(player);
 
         em.persist(player);
 
         log.info("Created player: " + player.getName() + " id: " + player.getId());
 
         return player.getId();
+    }
+
+    private void validatePlayer(Player player) {
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<Player>> constraintViolations = validator.validate(player);
+
+        if (constraintViolations.size() > 0) {
+            Set<String> violationMessages = new HashSet<>();
+
+            for (ConstraintViolation<Player> constraintViolation : constraintViolations) {
+                violationMessages.add(constraintViolation.getPropertyPath() + ": " + constraintViolation.getMessage());
+            }
+
+            throw new IllegalStateException("Player is not valid:\n" + violationMessages.toString());
+        }
     }
 
     public Player getPlayer(Long id) {
@@ -83,12 +112,5 @@ public class PlayerRepository {
         em.persist(gameEvent);
 
         return gameEvent.getId();
-    }
-
-    public void deleteGameEvents(List<GameEvent> gameEventsToDelete) {
-
-        for (GameEvent gameEvent : gameEventsToDelete) {
-            em.remove(gameEvent);
-        }
     }
 }

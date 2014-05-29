@@ -7,6 +7,7 @@ import com.clowndata.repository.PlayerRepository;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import java.util.List;
 
 /**
@@ -16,10 +17,17 @@ import java.util.List;
 public class PlayerServiceImpl implements PlayerService {
 
     @Inject
-    PlayerRepository playerRepository;
+    private PlayerRepository playerRepository;
 
     @Inject
     private GameRepository gameRepository;
+
+    public PlayerServiceImpl(PlayerRepository playerRepository) {
+        this.playerRepository = playerRepository;
+    }
+
+    public PlayerServiceImpl() {
+    }
 
     @Override
     public List getAllPlayers() {
@@ -44,6 +52,15 @@ public class PlayerServiceImpl implements PlayerService {
         persistedPlayer.updatePlayer(player);
     }
 
+    /*
+        @Inject
+        public PlayerServiceImpl(PlayerRepository playerRepository) {
+            this.playerRepository = playerRepository;
+        }
+
+        public PlayerServiceImpl() {
+        }
+    */
     public void deletePlayer(Long playerId) {
 
         Player player = playerRepository.getPlayer(playerId);

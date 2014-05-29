@@ -31,6 +31,14 @@ public class GameServiceImpl implements GameService {
     @Transient
     final Logger log = LoggerFactory.getLogger(GameServiceImpl.class);
 
+    public GameServiceImpl(GameRepository gameRepository, PlayerRepository playerRepository) {
+        this.gameRepository = gameRepository;
+        this.playerRepository = playerRepository;
+    }
+
+    public GameServiceImpl() {
+    }
+
     @Override
     public List<Game> getAllGames() {
         return gameRepository.getAllGames();
@@ -84,11 +92,6 @@ public class GameServiceImpl implements GameService {
     public GameSummary getGameSummary(Long gameId) {
 
         Game game = gameRepository.getGame(gameId);
-
-        if (game == null) {
-            //TODO: return Response.Status.NOT_FOUND, not IllegalException
-            throw new IllegalStateException("Invalid gameId: " + gameId);
-        }
 
         GameSummary gameSummary = new GameSummary(game);
 

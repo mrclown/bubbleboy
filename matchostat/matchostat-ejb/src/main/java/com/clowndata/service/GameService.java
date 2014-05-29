@@ -11,11 +11,11 @@ import java.util.List;
  */
 public interface GameService {
 
-    public List<Game> getAllGames();
+    public Long createGame(Game game);
 
     public Game getGame(Long id);
 
-    public Long createGame(Game game);
+    public List<Game> getAllGames();
 
     public void updateGame(Long id, Game game);
 
