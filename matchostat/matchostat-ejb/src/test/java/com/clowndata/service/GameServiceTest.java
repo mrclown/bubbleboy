@@ -6,8 +6,6 @@ import com.clowndata.model.GameEvent;
 import com.clowndata.model.Player;
 import com.clowndata.model.Team;
 import com.clowndata.model.valueobject.GameSummary;
-import com.clowndata.model.valueobject.PlayerSummary;
-import com.clowndata.model.valueobject.TeamSummary;
 import com.clowndata.repository.GameRepository;
 import com.clowndata.repository.PlayerRepository;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -25,13 +23,10 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.*;
-
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created by 2014.
